@@ -1,0 +1,504 @@
+fileFormatVersion: 2
+guid: fcce6c58053bc2c4e97022ef4b11eab1
+timeCreated: 1490288025
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: Hud_Play
+    21300002: Hud_Fastward
+    21300004: Hud_Save
+    21300006: Hud_Info
+    21300008: Hud_Music
+    21300010: Hud_Player
+    21300012: Hud_Options
+    21300014: Hud_Exit
+    21300016: Hud_WaveBG
+    21300018: Hud_Pause
+    21300020: Hud_Blocks
+    21300022: Hud_Crystal
+    21300024: Hud_Rewind
+    21300026: Hud_Heart
+    21300028: Menu_MainMenu
+    21300030: Menu_Options
+    21300032: Menu_Resume
+    21300034: Menu_Exit
+    21300036: Menu_Close
+    21300038: Ui_Slider_Handle
+    21300040: Ui_Slider_Fill
+    21300042: Ui_Slider_Fill_Dark
+    21300044: Ui_Slider_ColorTintable
+    21300046: UI_Border
+    21300048: Hud_Accept
+    21300050: Hud_TurretBuild
+    21300052: Hud_BuildingBuild
+    21300054: Hud_Research
+    21300056: Hud_Blank
+    21300058: Hud_Blank 02
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: 0
+    aniso: -1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 0
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Android
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 2
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Hud_Play
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1997
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_Fastward
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 1997
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_Save
+      rect:
+        serializedVersion: 2
+        x: 154
+        y: 1997
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_Info
+      rect:
+        serializedVersion: 2
+        x: 205
+        y: 1997
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_Music
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1997
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_Player
+      rect:
+        serializedVersion: 2
+        x: 307
+        y: 1997
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_Options
+      rect:
+        serializedVersion: 2
+        x: 358
+        y: 1997
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_Exit
+      rect:
+        serializedVersion: 2
+        x: 409
+        y: 1997
+        width: 95
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_WaveBG
+      rect:
+        serializedVersion: 2
+        x: 505
+        y: 1997
+        width: 205
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_Pause
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 1997
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_Blocks
+      rect:
+        serializedVersion: 2
+        x: 711
+        y: 2014
+        width: 35
+        height: 34
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_Crystal
+      rect:
+        serializedVersion: 2
+        x: 747
+        y: 2011
+        width: 35
+        height: 37
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_Rewind
+      rect:
+        serializedVersion: 2
+        x: 52
+        y: 1946
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_Heart
+      rect:
+        serializedVersion: 2
+        x: 783
+        y: 2014
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Menu_MainMenu
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1895
+        width: 155
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Menu_Options
+      rect:
+        serializedVersion: 2
+        x: 157
+        y: 1895
+        width: 155
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Menu_Resume
+      rect:
+        serializedVersion: 2
+        x: 313
+        y: 1895
+        width: 205
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Menu_Exit
+      rect:
+        serializedVersion: 2
+        x: 519
+        y: 1895
+        width: 155
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Menu_Close
+      rect:
+        serializedVersion: 2
+        x: 675
+        y: 1895
+        width: 155
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Ui_Slider_Handle
+      rect:
+        serializedVersion: 2
+        x: 815
+        y: 2008
+        width: 40
+        height: 40
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 6, y: 6, z: 6, w: 6}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Ui_Slider_Fill
+      rect:
+        serializedVersion: 2
+        x: 856
+        y: 2016
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 11, y: 11, z: 11, w: 11}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Ui_Slider_Fill_Dark
+      rect:
+        serializedVersion: 2
+        x: 889
+        y: 2016
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 11, y: 11, z: 11, w: 11}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Ui_Slider_ColorTintable
+      rect:
+        serializedVersion: 2
+        x: 922
+        y: 2016
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 11, y: 11, z: 11, w: 11}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: UI_Border
+      rect:
+        serializedVersion: 2
+        x: 955
+        y: 2016
+        width: 32
+        height: 32
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 1, y: 1, z: 1, w: 1}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_Accept
+      rect:
+        serializedVersion: 2
+        x: 1
+        y: 1946
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_TurretBuild
+      rect:
+        serializedVersion: 2
+        x: 103
+        y: 1946
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_BuildingBuild
+      rect:
+        serializedVersion: 2
+        x: 154
+        y: 1946
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_Research
+      rect:
+        serializedVersion: 2
+        x: 205
+        y: 1946
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_Blank
+      rect:
+        serializedVersion: 2
+        x: 256
+        y: 1946
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: Hud_Blank 02
+      rect:
+        serializedVersion: 2
+        x: 307
+        y: 1946
+        width: 50
+        height: 50
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
