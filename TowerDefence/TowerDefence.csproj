@@ -93,6 +93,7 @@
     <Compile Include="Assets\Scripts\Managers\BuildManager.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Managers\MouseManager.cs" />
+    <Compile Include="Assets\Scripts\MaxTest.cs" />
     <Compile Include="Assets\Scripts\Pathing\Waypoint.cs" />
     <Compile Include="Assets\Scripts\References.cs" />
     <Compile Include="Assets\Scripts\UI\BuildMenu\UIBuildMenu.cs" />

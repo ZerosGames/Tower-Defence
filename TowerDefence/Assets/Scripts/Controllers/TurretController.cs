@@ -21,11 +21,13 @@ public class TurretController : MonoBehaviour
     [SerializeField]
     private bool placed = false;
 
+    private Node placementNode;
     //Public Variables\\
 
     public GameObject rotPoint;
     public GameObject hitEffectPrefab;
     public Transform[] firePoint = new Transform[2];
+
     public enum TurretUpgradeTypes
     {
         Damage,
@@ -143,21 +145,24 @@ public class TurretController : MonoBehaviour
         switch (_TypeOfUpgrade)
         {   
             case TurretUpgradeTypes.Damage:
-                turretData.tDamage += 10;
+                turretData.tDamage += turretData.tDamagePreUpgrade;
+                turretData.costToUpgradeDamage += turretData.costPerUpgrade;
                 if (turretData.tDamage > turretData.tMaxDamage)
                 {
                     turretData.tDamage = turretData.tMaxDamage;
                 }
                 break;
             case TurretUpgradeTypes.FireRate:
-                turretData.tFireRate += 5;
+                turretData.tFireRate += turretData.tFireRatePreUpgrade;
+                turretData.costToUpgradeFirerate += turretData.costPerUpgrade;
                 if (turretData.tFireRate > turretData.tMaxFireRate)
                 {
                     turretData.tFireRate = turretData.tMaxFireRate;
                 }
                 break;
             case TurretUpgradeTypes.Range:
-                turretData.tRange += 1;
+                turretData.tRange += turretData.tRangePreUpgrade;
+                turretData.costToUpgradeRange += turretData.costPerUpgrade;
                 if (turretData.tRange > turretData.tMaxRange)
                 {
                     turretData.tRange = turretData.tMaxRange;
@@ -166,6 +171,24 @@ public class TurretController : MonoBehaviour
             default:
                 break;
         }
+    }
+
+    public void SellTurret()
+    {
+        PlayerData.playerData.currentcurrency += turretData.SellTurretCost;
+        References.turretPlaced.Remove(gameObject);
+        placementNode.Placeable = true;
+        Destroy(gameObject);
+    }
+
+    public void SetPlacementNode(Node _node)
+    {
+        placementNode = _node;
+    }
+
+    public Node GetPlacementNode()
+    {
+        return placementNode;
     }
 
     void OnDrawGizmos()

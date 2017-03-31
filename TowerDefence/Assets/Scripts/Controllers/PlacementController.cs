@@ -53,7 +53,7 @@ public class PlacementController : MonoBehaviour {
                 {
                     if (PlayerData.playerData.purchaseTurret(turretToPlace.GetComponent<TurretController>().GetTurretData()))
                     {
-                        ShiftPlaceTurret();
+                        ShiftPlaceTurret(mapGrid.NodeFromWorldPos(hitPoint));
                         mapGrid.NodeFromWorldPos(hitPoint).Placeable = false;
                     }
                 }
@@ -61,7 +61,7 @@ public class PlacementController : MonoBehaviour {
                 {
                     if (PlayerData.playerData.purchaseTurret(turretToPlace.GetComponent<TurretController>().GetTurretData()))
                     {
-                        placeTurret();
+                        placeTurret(mapGrid.NodeFromWorldPos(hitPoint));
                         mapGrid.NodeFromWorldPos(hitPoint).Placeable = false;
                     }
                 }
@@ -73,19 +73,21 @@ public class PlacementController : MonoBehaviour {
         }
     }
 
-    void placeTurret()
+    void placeTurret(Node _node)
     {
         TurretController TC = turretToPlace.GetComponent<TurretController>();
         TC.SetPlaced(true);
+        TC.SetPlacementNode(_node);
         References.turretPlaced.Add(turretToPlace);
         turretToPlace = null;
         buildManager.SetTurretToBuild(null);
     }
 
-    void ShiftPlaceTurret()
+    void ShiftPlaceTurret(Node _node)
     {
         TurretController TC = turretToPlace.GetComponent<TurretController>();
         TC.SetPlaced(true);
+        TC.SetPlacementNode(_node);
         References.turretPlaced.Add(turretToPlace);
         turretToPlace = null;
         turretToPlace = Instantiate(buildManager.GetTurretToBuild(), new Vector3(0, -10, 0), Quaternion.identity) as GameObject;

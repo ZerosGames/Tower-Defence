@@ -21,6 +21,7 @@ public class NodeGrid : MonoBehaviour {
 
     public GameObject Text;
 
+    public MaxTest test;
     public bool debug = false;
 
     void Awake()
@@ -61,7 +62,10 @@ public class NodeGrid : MonoBehaviour {
         if (debug)
         {
             DrawCostMap();
+
+            test.SpawnTurrets();
         }
+
     }
 
     public Node NodeFromWorldPos(Vector3 _worldPos)

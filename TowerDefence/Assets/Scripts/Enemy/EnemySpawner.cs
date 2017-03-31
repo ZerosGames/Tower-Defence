@@ -95,8 +95,8 @@ public class EnemySpawner : MonoBehaviour {
     {
         Wave nextWave = new Wave();
 
-        nextWave.activePortals = 1;
-        nextWave.enemyCount = 10;
+        nextWave.activePortals = 4;
+        nextWave.enemyCount = 1000;
         nextWave.enemysType = 0;
 
         return nextWave;

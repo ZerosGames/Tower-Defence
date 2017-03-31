@@ -6,6 +6,8 @@ using UnityEngine.EventSystems;
 public class MouseManager : MonoBehaviour
 {
     private GameObject hitObject;
+    [SerializeField]
+    private UITurretUpgrade UpgradeMenu;
 
     // Use this for initialization
     void Start()
@@ -25,6 +27,7 @@ public class MouseManager : MonoBehaviour
                 if(TC != null)
                 {
                     TurretUpgradeController.TUC.SetSelectedController(TC);
+                    UpgradeMenu.ShowUI(true);
                 }
             }
             else
@@ -32,8 +35,14 @@ public class MouseManager : MonoBehaviour
                 if(TurretUpgradeController.TUC.GetSelectedController())
                 {
                     TurretUpgradeController.TUC.SetSelectedController(null);
+                    UpgradeMenu.ShowUI(false);
                 }
             }
+        }
+        else if(InputManager.GetMouseButtonRightPressed() && !BuildManager.BuildManagerInstance.GetBuildingMode() && !EventSystem.current.IsPointerOverGameObject())
+        {
+            TurretUpgradeController.TUC.SetSelectedController(null);
+            UpgradeMenu.ShowUI(false);
         }
     }
 

@@ -40,28 +40,28 @@ public class PlayerData : MonoBehaviour {
         switch (types)
         {
             case TurretController.TurretUpgradeTypes.Damage:
-                if(currentZomnCurrency - _turretData.costToUpgrade < 0)
+                if(currentZomnCurrency - _turretData.costToUpgradeDamage < 0)
                 {
                     return false;
                 }
 
-                currentZomnCurrency -= _turretData.costToUpgrade;
+                currentZomnCurrency -= _turretData.costToUpgradeDamage;
                 break;
             case TurretController.TurretUpgradeTypes.FireRate:
-                if (currentZomnCurrency - _turretData.costToUpgrade < 0)
+                if (currentZomnCurrency - _turretData.costToUpgradeFirerate < 0)
                 {
                     return false;
                 }
 
-                currentZomnCurrency -= _turretData.costToUpgrade;
+                currentZomnCurrency -= _turretData.costToUpgradeFirerate;
                 break;
             case TurretController.TurretUpgradeTypes.Range:
-                if (currentZomnCurrency - _turretData.costToUpgrade < 0)
+                if (currentZomnCurrency - _turretData.costToUpgradeRange < 0)
                 {
                     return false;
                 }
 
-                currentZomnCurrency -= _turretData.costToUpgrade;
+                currentZomnCurrency -= _turretData.costToUpgradeRange;
                 break;
             default:
                 break;

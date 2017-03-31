@@ -79,17 +79,7 @@ public class UIManager : MonoBehaviour {
             {
                 MenuUI.ShowUI(true);
             }
-        }
-
-        if(TurretUpgradeController.TUC.isTurretSelected() && !turretUpgradeMenu.isShowing)
-        {
-            ShowTurretUpgradeUI(true);
-        }
-        else if (!TurretUpgradeController.TUC.isTurretSelected() && turretUpgradeMenu.isShowing)
-        {
-            ShowTurretUpgradeUI(false);
-        }
-        
+        }   
 	}
 
     public void ExitGame()
