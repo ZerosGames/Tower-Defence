@@ -8,7 +8,7 @@ public class PlacementController : MonoBehaviour {
     public LayerMask rayMask;
     private GameObject turretToPlace;
 
-    public NodeGrid mapGrid;
+    public MapGenerator mapGrid;
 
     private bool placementBlocked = false;
 
@@ -36,16 +36,17 @@ public class PlacementController : MonoBehaviour {
 
     public void HandlePlacingTurret(GameObject _turretToPlace)
     {
-        Vector3 hitPoint;
+        Node hitNode;
   
         if (Input.GetMouseButton(1))
         {
             CancelPlacement();
         }
 
-        if (getRayPointFromCameraAndObject(out hitPoint, rayMask) && !EventSystem.current.IsPointerOverGameObject())
+        if (getRayPointFromCameraAndObject(out hitNode, rayMask) && !EventSystem.current.IsPointerOverGameObject())
         {
-            _turretToPlace.transform.position = hitPoint;
+            _turretToPlace.transform.position = hitNode.WorldPos;
+            _turretToPlace.transform.position += Vector3.up;
 
             if (InputManager.GetMouseButtonLeftPressed() && !placementBlocked)
             {
@@ -53,27 +54,27 @@ public class PlacementController : MonoBehaviour {
                 {
                     if (PlayerData.playerData.purchaseTurret(turretToPlace.GetComponent<TurretController>().GetTurretData()))
                     {
-                        ShiftPlaceTurret(mapGrid.NodeFromWorldPos(hitPoint));
-                        mapGrid.NodeFromWorldPos(hitPoint).Placeable = false;
+                        ShiftPlaceTurret(hitNode);
+                        hitNode.Placeable = false;
                     }
                 }
                 else
                 {
                     if (PlayerData.playerData.purchaseTurret(turretToPlace.GetComponent<TurretController>().GetTurretData()))
                     {
-                        placeTurret(mapGrid.NodeFromWorldPos(hitPoint));
-                        mapGrid.NodeFromWorldPos(hitPoint).Placeable = false;
+                        placeTurret(hitNode);
+                        hitNode.Placeable = false;
                     }
                 }
             }
         }
         else
         {
-            _turretToPlace.transform.position = hitPoint;
+            _turretToPlace.transform.position = Vector3.zero;
         }
     }
 
-    void placeTurret(Node _node)
+    public void placeTurret(Node _node)
     {
         TurretController TC = turretToPlace.GetComponent<TurretController>();
         TC.SetPlaced(true);
@@ -83,7 +84,7 @@ public class PlacementController : MonoBehaviour {
         buildManager.SetTurretToBuild(null);
     }
 
-    void ShiftPlaceTurret(Node _node)
+    public void ShiftPlaceTurret(Node _node)
     {
         TurretController TC = turretToPlace.GetComponent<TurretController>();
         TC.SetPlaced(true);
@@ -93,14 +94,14 @@ public class PlacementController : MonoBehaviour {
         turretToPlace = Instantiate(buildManager.GetTurretToBuild(), new Vector3(0, -10, 0), Quaternion.identity) as GameObject;
     }
 
-    void CancelPlacement()
+    public void CancelPlacement()
     {
         Destroy(turretToPlace);
         turretToPlace = null;
         buildManager.SetTurretToBuild(null);
     }
 
-    bool getRayPointFromCameraAndObject(out Vector3 _point, LayerMask _mask)
+    bool getRayPointFromCameraAndObject(out Node _HitNode, LayerMask _mask)
     {
         Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
         RaycastHit hitInfo = new RaycastHit();
@@ -108,21 +109,21 @@ public class PlacementController : MonoBehaviour {
         {
             if (hitInfo.collider.gameObject.layer == 9)
             {
-                Node hitNode = mapGrid.NodeFromWorldPos(hitInfo.point);
+                Node hitNode = NodeGrid.NodeFromWorldPos(hitInfo.point, mapGrid.grid, mapGrid.MapWidth, mapGrid.MapWidth, mapGrid.GridSizeX, mapGrid.GridSizeY);
 
                 if(hitNode.Placeable)
                 {
                     placementBlocked = false;
-                    _point = hitNode.WorldPos;
+                    _HitNode = hitNode;
                     return true;
                 }
 
-                _point = new Vector3 (hitNode.WorldPos.x, 1, hitNode.WorldPos.z);
+                _HitNode = hitNode;
                 placementBlocked = false;
                 return false;
             }
         }
-        _point = new Vector3(0, -10, 0);
+        _HitNode = null;
         return false;
     }
 }

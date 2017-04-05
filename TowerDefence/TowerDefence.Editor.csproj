@@ -123,9 +123,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Assets\DecalSystem\DecalSystem\Editor\DecalBuilder.cs" />
-    <Compile Include="Assets\DecalSystem\DecalSystem\Editor\DecalEditor.cs" />
-    <Compile Include="Assets\DecalSystem\DecalSystem\Editor\DecalPolygon.cs" />
+    <Compile Include="Assets\Scripts\Editor\MapGeneratorEditor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\ProjectorMultiply.shader" />

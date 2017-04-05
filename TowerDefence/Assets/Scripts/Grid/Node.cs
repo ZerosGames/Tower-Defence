@@ -15,9 +15,31 @@ public class Node
 
     public Vector3 dirVector;
 
+    public int hCost;
+    public int gCost;
+    public Node Parent;
+
+    public bool isStartNode;
+    public bool isEndNode;
+
     public Node()
     {
 
+    }
+
+    //public Node(Vector3 _worldPos, int _gridX, int _gridY, bool _walkable)
+    //{
+    //    WorldPos = _worldPos;
+    //    gridX = _gridX;
+    //    gridY = _gridY;
+    //    Walkable = _walkable;
+    //}
+
+    public Node(int _gridX, int _gridY, Vector3 _WorldPos)
+    {
+        gridX = _gridX;
+        gridY = _gridY;
+        WorldPos = _WorldPos;
     }
 
     public Node(int _gridX, int _gridY, Vector3 _WorldPos, bool _placeable, bool _walkable, int _pathDistance, Node _parent, int _pathingWeight, Vector3 _dirVector)
@@ -38,5 +60,14 @@ public class Node
         //Vector3 Direction = new Vector3(parent.WorldPos.x - WorldPos.x, 0, parent.WorldPos.z - WorldPos.z).normalized;
         return dirVector;
     }
+
+    public int fCost
+    {
+        get
+        {
+            return gCost + fCost;
+        }
+    }
+
 }
 

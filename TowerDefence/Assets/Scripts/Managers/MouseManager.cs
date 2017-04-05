@@ -5,9 +5,17 @@ using UnityEngine.EventSystems;
 
 public class MouseManager : MonoBehaviour
 {
-    private GameObject hitObject;
+    private GameObject ThirdPersonhitObject;
     [SerializeField]
     private UITurretUpgrade UpgradeMenu;
+
+    enum MouseInputStates
+    {
+        ThirdPersonMode,
+        BuildingMode
+    }
+
+    MouseInputStates MInputStates;
 
     // Use this for initialization
     void Start()
@@ -18,32 +26,25 @@ public class MouseManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (InputManager.GetMouseButtonLeftPressed() && !BuildManager.BuildManagerInstance.GetBuildingMode() && !EventSystem.current.IsPointerOverGameObject())
+        if(BuildManager.BuildManagerInstance.GetBuildingMode())
         {
-            if(FireRayCast(1<<10, out hitObject))
-            {
-                TurretController TC = hitObject.GetComponent<TurretController>();
+            MInputStates = MouseInputStates.BuildingMode;
+        }
+        else
+        {
+            MInputStates = MouseInputStates.ThirdPersonMode;
+        }
 
-                if(TC != null)
-                {
-                    TurretUpgradeController.TUC.SetSelectedController(TC);
-                    UpgradeMenu.ShowUI(true);
-                }
-            }
-            else
-            {
-                if(TurretUpgradeController.TUC.GetSelectedController())
-                {
-                    TurretUpgradeController.TUC.SetSelectedController(null);
-                    UpgradeMenu.ShowUI(false);
-                }
-            }
-        }
-        else if(InputManager.GetMouseButtonRightPressed() && !BuildManager.BuildManagerInstance.GetBuildingMode() && !EventSystem.current.IsPointerOverGameObject())
+        switch (MInputStates)
         {
-            TurretUpgradeController.TUC.SetSelectedController(null);
-            UpgradeMenu.ShowUI(false);
-        }
+            case MouseInputStates.ThirdPersonMode:
+                HandleThirdPersonMInput();
+                break;
+            case MouseInputStates.BuildingMode:
+                break;
+            default:
+                break;
+        }       
     }
 
     bool FireRayCast(LayerMask _mask, out GameObject _hitObject)
@@ -59,5 +60,34 @@ public class MouseManager : MonoBehaviour
 
         _hitObject = null;
         return false;
+    }
+
+    void HandleThirdPersonMInput()
+    {
+        if (InputManager.GetMouseButtonLeftPressed() && !EventSystem.current.IsPointerOverGameObject())
+        {
+            if (FireRayCast(1 << 10, out ThirdPersonhitObject))
+            {
+                TurretController TC = ThirdPersonhitObject.GetComponent<TurretController>();
+
+                if (TC != null)
+                {
+                    UpgradeMenu.ShowUI(true);
+                    UpgradeMenu.SetSelectedTC(TC);
+                    
+                }
+            }
+            else
+            {
+                UpgradeMenu.ShowUI(false);
+                UpgradeMenu.SetSelectedTC(null);
+            }
+        }
+        else if (InputManager.GetMouseButtonRightPressed() && !EventSystem.current.IsPointerOverGameObject())
+        {
+            UpgradeMenu.ShowUI(false);
+            UpgradeMenu.SetSelectedTC(null);
+
+        }
     }
 }

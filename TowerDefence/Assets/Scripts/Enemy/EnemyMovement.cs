@@ -20,7 +20,7 @@ public class EnemyMovement : MonoBehaviour {
     {
         if (!GameManager.gameManager.GetPause())
         {
-            CurrentNode = NodeGrid.nodeGrid.NodeFromWorldPos(transform.position);
+            CurrentNode = VectorFieldGrid.nodeGrid.NodeFromWorldPos(transform.position);
 
             if (CurrentNode.WorldPos.x < 1 && CurrentNode.WorldPos.x > -1 && CurrentNode.WorldPos.z < 1 && CurrentNode.WorldPos.z > -1)
             {

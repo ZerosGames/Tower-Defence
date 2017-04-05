@@ -70,8 +70,8 @@ public class CameraController : MonoBehaviour {
         }
 
         NewCamPos.y = Mathf.Clamp(NewCamPos.y, minY, maxY);
-        NewCamPos.x = Mathf.Clamp(NewCamPos.x, -mapWidth / 2, (mapWidth / 2) - Camera.main.fieldOfView - 2);
-        NewCamPos.z = Mathf.Clamp(NewCamPos.z, -mapHeight / 2, (mapHeight / 2) - Camera.main.fieldOfView - 2);
+        NewCamPos.x = Mathf.Clamp(NewCamPos.x, -mapWidth, (mapWidth) - Camera.main.fieldOfView - 2);
+        NewCamPos.z = Mathf.Clamp(NewCamPos.z, -mapHeight, (mapHeight) - Camera.main.fieldOfView - 2);
 
         Vector3 LerpedMovement = Vector3.Lerp(camPos, NewCamPos, 0.5f);
 

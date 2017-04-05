@@ -9,11 +9,11 @@ public class MaxTest : MonoBehaviour {
 	// Use this for initialization
 	public void SpawnTurrets () {
 
-        foreach (Node n in NodeGrid.nodeGrid.Grid)
+        foreach (Node n in VectorFieldGrid.nodeGrid.Grid)
         {
             if (n.Placeable)
             {
-                Instantiate(Turret, n.WorldPos, Quaternion.identity);
+                //Instantiate(Turret, n.WorldPos, Quaternion.identity);
             }
         }
 	}

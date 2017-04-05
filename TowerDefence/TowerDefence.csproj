@@ -79,22 +79,30 @@
     <Compile Include="Assets\Scripts\Controllers\EnemyController.cs" />
     <Compile Include="Assets\Scripts\Controllers\PlacementController.cs" />
     <Compile Include="Assets\Scripts\Controllers\TurretController.cs" />
-    <Compile Include="Assets\Scripts\Controllers\TurretUpgradeController.cs" />
     <Compile Include="Assets\Scripts\Data\PlayerData.cs" />
     <Compile Include="Assets\Scripts\Data\eData.cs" />
     <Compile Include="Assets\Scripts\Data\tData.cs" />
     <Compile Include="Assets\Scripts\Data\tTypes.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemyMovement.cs" />
     <Compile Include="Assets\Scripts\Enemy\EnemySpawner.cs" />
+    <Compile Include="Assets\Scripts\First Person\Player.cs" />
+    <Compile Include="Assets\Scripts\First Person\PlayerController.cs" />
+    <Compile Include="Assets\Scripts\First Person\PlayerWeapon.cs" />
+    <Compile Include="Assets\Scripts\First Person\PlayerWeaponController.cs" />
     <Compile Include="Assets\Scripts\GameSettings.cs" />
     <Compile Include="Assets\Scripts\Grid\Node.cs" />
     <Compile Include="Assets\Scripts\Grid\NodeGrid.cs" />
+    <Compile Include="Assets\Scripts\Grid\PlacementGrid.cs" />
+    <Compile Include="Assets\Scripts\Grid\VectorFieldGrid.cs" />
     <Compile Include="Assets\Scripts\Input\InputManager.cs" />
     <Compile Include="Assets\Scripts\Managers\BuildManager.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
     <Compile Include="Assets\Scripts\Managers\MouseManager.cs" />
+    <Compile Include="Assets\Scripts\MapGen\MapGenerator.cs" />
+    <Compile Include="Assets\Scripts\MapGen\MazeGenerator.cs" />
     <Compile Include="Assets\Scripts\MaxTest.cs" />
     <Compile Include="Assets\Scripts\Pathing\Waypoint.cs" />
+    <Compile Include="Assets\Scripts\PlacementMesh.cs" />
     <Compile Include="Assets\Scripts\References.cs" />
     <Compile Include="Assets\Scripts\UI\BuildMenu\UIBuildMenu.cs" />
     <Compile Include="Assets\Scripts\UI\BuildMenu\UIBuildingBuildMenu.cs" />
@@ -107,7 +115,6 @@
     <Compile Include="Assets\Scripts\UI\UIOptionMenu.cs" />
     <Compile Include="Assets\Scripts\UI\UITurretUpgrade.cs" />
     <Compile Include="Assets\Scripts\Wave.cs" />
-    <Compile Include="Assets\test.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Assets\Shaders\ProjectorMultiply.shader" />

@@ -5,6 +5,9 @@ using UnityEngine.UI;
 
 public class UITurretUpgrade : MonoBehaviour
 {
+    private TurretController SelectedTC;
+    private tData SelectedTCData;
+
     public bool isShowing = false;
     public RectTransform CanvasRect;
 
@@ -26,79 +29,87 @@ public class UITurretUpgrade : MonoBehaviour
 
     void Update()
     {
-        if (TurretUpgradeController.TUC.GetSelectedController().GetTurretData().tDamage >= TurretUpgradeController.TUC.GetSelectedController().GetTurretData().tMaxDamage)
+        if (SelectedTC != null)
         {
-            DamageUgradeButton.interactable = false;
+            SelectedTCData = SelectedTC.GetTurretData();
+
+            
+
+            UpdateUI();
         }
-
-        if (TurretUpgradeController.TUC.GetSelectedController().GetTurretData().tFireRate >= TurretUpgradeController.TUC.GetSelectedController().GetTurretData().tMaxFireRate)
-        {
-            FireRateUpgradeButton.interactable = false;
-        }
-
-        if (TurretUpgradeController.TUC.GetSelectedController().GetTurretData().tRange >= TurretUpgradeController.TUC.GetSelectedController().GetTurretData().tMaxRange)
-        {
-            RangeUpgradeButton.interactable = false;
-        }
-
-        DamageUpgradeCostText.text = TurretUpgradeController.TUC.GetSelectedController().GetTurretData().costToUpgradeDamage.ToString();
-        RangeUpgradeCostText.text = TurretUpgradeController.TUC.GetSelectedController().GetTurretData().costToUpgradeRange.ToString();
-        FireRateUpgradeCostText.text = TurretUpgradeController.TUC.GetSelectedController().GetTurretData().costToUpgradeFirerate.ToString();
-
-        SellTurret.text = TurretUpgradeController.TUC.GetSelectedController().GetTurretData().SellTurretCost.ToString();
-
-        UpdateUI();
     }
 
     void UpdateUI()
     {
-        DamageText.text = TurretUpgradeController.TUC.GetSelectedController().GetTurretData().tDamage.ToString();
-        FireRateText.text = TurretUpgradeController.TUC.GetSelectedController().GetTurretData().tFireRate.ToString();
-        RangeText.text = TurretUpgradeController.TUC.GetSelectedController().GetTurretData().tRange.ToString();
+        if (SelectedTCData.tDamage >= SelectedTCData.tMaxDamage)
+        {
+            DamageUgradeButton.interactable = false;
+        }
+        else
+        {
+            DamageUgradeButton.interactable = true;
+        }
+
+        if (SelectedTCData.tFireRate >= SelectedTCData.tMaxFireRate)
+        {
+            FireRateUpgradeButton.interactable = false;
+        }
+        else
+        {
+            FireRateUpgradeButton.interactable = true;
+        }
+
+        if (SelectedTCData.tRange >= SelectedTCData.tMaxRange)
+        {
+            RangeUpgradeButton.interactable = false;
+        }
+        else
+        {
+            RangeUpgradeButton.interactable = true;
+        }
+
+        DamageUpgradeCostText.text = SelectedTCData.costToUpgradeDamage.ToString();
+        RangeUpgradeCostText.text = SelectedTCData.costToUpgradeRange.ToString();
+        FireRateUpgradeCostText.text = SelectedTCData.costToUpgradeFirerate.ToString();
+
+        SellTurret.text = SelectedTCData.SellTurretCost.ToString();
+
+        DamageText.text = SelectedTCData.tDamage.ToString();
+        FireRateText.text = SelectedTCData.tFireRate.ToString();
+        RangeText.text = SelectedTCData.tRange.ToString();
     }
        
     public void UpgradeTurretDamage()
     {
-        if (PlayerData.playerData.purchaseTurretUpgrade(TurretController.TurretUpgradeTypes.Damage, TurretUpgradeController.TUC.GetSelectedController().GetTurretData()))
+        if (PlayerData.playerData.purchaseTurretUpgrade(TurretController.TurretUpgradeTypes.Damage, SelectedTCData))
         {
-            TurretUpgradeController.TUC.GetSelectedController().UpgradeTurret(TurretController.TurretUpgradeTypes.Damage);
+            SelectedTC.UpgradeTurret(TurretController.TurretUpgradeTypes.Damage);
             UpdateUI();
         }
     }
 
     public void UpgradeTurretFireRate()
     {
-        if (PlayerData.playerData.purchaseTurretUpgrade(TurretController.TurretUpgradeTypes.FireRate, TurretUpgradeController.TUC.GetSelectedController().GetTurretData()))
+        if (PlayerData.playerData.purchaseTurretUpgrade(TurretController.TurretUpgradeTypes.FireRate, SelectedTCData))
         {
-            TurretUpgradeController.TUC.GetSelectedController().UpgradeTurret(TurretController.TurretUpgradeTypes.FireRate);
+            SelectedTC.UpgradeTurret(TurretController.TurretUpgradeTypes.FireRate);
             UpdateUI();
         }
     }
 
     public void UpgradeTurretRange()
     {
-        if (PlayerData.playerData.purchaseTurretUpgrade(TurretController.TurretUpgradeTypes.Range, TurretUpgradeController.TUC.GetSelectedController().GetTurretData()))
+        if (PlayerData.playerData.purchaseTurretUpgrade(TurretController.TurretUpgradeTypes.Range, SelectedTCData))
         {
-            TurretUpgradeController.TUC.GetSelectedController().UpgradeTurret(TurretController.TurretUpgradeTypes.Range);
+            SelectedTC.UpgradeTurret(TurretController.TurretUpgradeTypes.Range);
             UpdateUI();
         }
     }
 
     public void OnSellTurret()
     {
-        TurretUpgradeController.TUC.GetSelectedController().SellTurret();
+        SelectedTC.SellTurret();
         ShowUI(false);
-    }
-
-    void ResetUI()
-    {
-        DamageText.text = "0";
-        FireRateText.text = "0";
-        RangeText.text = "0";
-
-        DamageUgradeButton.interactable = true;
-        FireRateUpgradeButton.interactable = true;
-        RangeUpgradeButton.interactable = true;
     }
 
     public void ShowUI(bool _show)
@@ -110,9 +121,12 @@ public class UITurretUpgrade : MonoBehaviour
             transform.position = myCanvas.transform.TransformPoint(pos);
         }
 
-        ResetUI();
         gameObject.SetActive(_show);
         isShowing = _show;
+    }
 
+    public void SetSelectedTC(TurretController _tc)
+    {
+        SelectedTC = _tc;
     }
 }
