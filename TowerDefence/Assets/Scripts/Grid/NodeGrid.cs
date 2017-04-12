@@ -6,7 +6,7 @@ public static class NodeGrid
 {
     public static Node[,] generateGrid(Vector3 _worldPos, int _mapWidth, int _mapHeight, int _gridSizeX, int _gridSizeY, float _nodeRadius)
     {
-        float nodeDiameter = _nodeRadius * 2;
+        float nodeDiameter = 0.5f * 2;
 
         Node[,] Grid = new Node[_gridSizeX, _gridSizeY];
         Vector3 worldBottomLeft = _worldPos - Vector3.right * _mapWidth / 2 - Vector3.forward * _mapHeight / 2;
@@ -23,6 +23,13 @@ public static class NodeGrid
         return Grid;
     }
 
+    public static Node NodeFromWorldPos(Vector3 _WorldPos, Node[,] _grid)
+    {
+        if (_WorldPos.x < 0 || _WorldPos.x > _grid.GetLength(0) || _WorldPos.z < 0 || _WorldPos.z > _grid.GetLength(1))
+            return null;
+        return _grid[(int)_WorldPos.x, (int)_WorldPos.z];
+    }
+
     public static Node NodeFromWorldPos(Vector3 _worldPos, Node[,] _grid, int _mapWidth, int _mapHeight, int _gridSizeX, int _gridSizeY)
     {
         float percentX = (_worldPos.x + _mapWidth / 2) / _mapWidth;
@@ -30,8 +37,13 @@ public static class NodeGrid
         percentX = Mathf.Clamp01(percentX);
         percentY = Mathf.Clamp01(percentY);
 
-        int x = Mathf.RoundToInt((_gridSizeX - 1) * percentX);
-        int y = Mathf.RoundToInt((_gridSizeY - 1) * percentY);
+        int x = Mathf.RoundToInt((_gridSizeX) * percentX);
+        int y = Mathf.RoundToInt((_gridSizeY) * percentY);
+
+        if(x >= _gridSizeX || y >= _gridSizeY)
+        {
+            return null;
+        }
 
         return _grid[x, y];
     }
@@ -65,19 +77,45 @@ public static class NodeGrid
         return true;
     }
 
-    public static Node[,] NodeGridFromByteArray(Vector3 _worldPos, int _mapWidth, int _mapHeight, float _nodeRadius, byte[,] _array)
+    public static Node[,] NodeGridFromByteArray(byte[,] _array)
     {
         Node[,] nodeGrid = new Node[_array.GetLength(0), _array.GetLength(1)];
 
-        float nodeDiameter = _nodeRadius * 2;
+        for (int x = 0; x < _array.GetLength(0); x++)
+        {
+            for (int y = 0; y < _array.GetLength(1); y++)
+            {
+                Vector3 _worldPos = new Vector3(x, 0, y);
 
+                nodeGrid[x, y] = new Node(x, y, _worldPos);
+                if (_array[x, y] == 1)
+                {
+                    nodeGrid[x, y].Placeable = true;
+                    nodeGrid[x, y].Walkable = false;
+                }
+                else
+                {
+                    nodeGrid[x, y].Placeable = false;
+                    nodeGrid[x, y].Walkable = true;
+                }
+            }
+        }
+
+        return nodeGrid;
+    }
+
+    public static Node[,] NodeGridFromByteArray(Vector3 _worldPos, byte[,] _array, int _mapWidth, int _mapHeight, float nodeDiameter, float _nodeRadius)
+    {
         Vector3 worldBottomLeft = _worldPos - Vector3.right * _mapWidth / 2 - Vector3.forward * _mapHeight / 2;
+
+        Node[,] nodeGrid = new Node[_array.GetLength(0), _array.GetLength(1)];
 
         for (int x = 0; x < _array.GetLength(0); x++)
         {
             for (int y = 0; y < _array.GetLength(1); y++)
             {
                 Vector3 WorldPos = worldBottomLeft + Vector3.right * (x * nodeDiameter + _nodeRadius) + Vector3.forward * (y * nodeDiameter + _nodeRadius);
+
                 nodeGrid[x, y] = new Node(x, y, WorldPos);
                 if (_array[x, y] == 1)
                 {

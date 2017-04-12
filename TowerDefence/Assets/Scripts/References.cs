@@ -15,6 +15,10 @@ public class References : MonoBehaviour {
     public static List<GameObject> enemysAlive = new List<GameObject>();
     public GameObject[] enemyTypes;
 
+    //buildings
+    public static List<GameObject> buildingsPlaced = new List<GameObject>();
+    public GameObject[] buildingTypes;
+
     //InGameRefs
     public EnemySpawner spawnerRef;
 
@@ -44,7 +48,7 @@ public class References : MonoBehaviour {
 
     public tData GetTurretData(int _type)
     {
-        return turretTypes[_type].GetComponent<TurretController>().GetTurretData();
+        return turretTypes[_type].GetComponent<TurretBase>().GetTurretData();
     }
 
     //Enemy Gets\\
@@ -55,6 +59,18 @@ public class References : MonoBehaviour {
 
     public eData GetEnemyData(int _type)
     {
-        return enemyTypes[_type].GetComponent<EnemyController>().enemyData;
+        return enemyTypes[_type].GetComponent<EnemyBase>().enemyData;
+    }
+
+    //Building Gets\\
+
+    public GameObject GetBuilding(int _type)
+    {
+        return buildingTypes[_type];
+    }
+
+    public bData GetBuilingData(int _type)
+    {
+        return buildingTypes[_type].GetComponent<CrystalMine>().GetBuildingData();
     }
 }

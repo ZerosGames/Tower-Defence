@@ -26,7 +26,7 @@ public class MouseManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if(BuildManager.BuildManagerInstance.GetBuildingMode())
+        if(BuildManager.Instance.GetBuildingMode())
         {
             MInputStates = MouseInputStates.BuildingMode;
         }
@@ -68,7 +68,7 @@ public class MouseManager : MonoBehaviour
         {
             if (FireRayCast(1 << 10, out ThirdPersonhitObject))
             {
-                TurretController TC = ThirdPersonhitObject.GetComponent<TurretController>();
+                TurretBase TC = ThirdPersonhitObject.GetComponent<TurretBase>();
 
                 if (TC != null)
                 {

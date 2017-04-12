@@ -19,7 +19,7 @@ public class UIBuildingBuildMenu : MonoBehaviour {
     {
 
         Anim = GetComponent<Animator>();
-        buildManager = BuildManager.BuildManagerInstance;
+        buildManager = BuildManager.Instance;
     }
 
     // Update is called once per frame
@@ -31,21 +31,13 @@ public class UIBuildingBuildMenu : MonoBehaviour {
     public void ShowUI(bool _show)
     {
         IsShowing = _show;
-        BuildManager.BuildManagerInstance.SetBuildMode(_show);
+        BuildManager.Instance.SetBuildMode(_show);
         Anim.SetBool("inBuildingMode", _show);
     }
 
-    public void turretSelected(int _type)
+    public void buildingSelected(int _type)
     {
-        buildManager.SetTurretToBuild(References.Refs.GetTurret(_type));
-    }
-
-    void SetCostDisplays()
-    {
-        for (int i = 0; i < costDisplays.Length; i++)
-        {
-            costDisplays[i].text = References.Refs.GetTurretData(i).costToBuild.ToString();
-        }
+        buildManager.SetBuildingToBuild(References.Refs.GetBuilding(_type));
     }
 
     public bool isShowing()

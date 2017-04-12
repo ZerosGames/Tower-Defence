@@ -36,3 +36,11 @@ public class tData
 }
 
 
+public enum TurretUpgradeTypes
+{
+    Damage,
+    FireRate,
+    Range
+}
+
+

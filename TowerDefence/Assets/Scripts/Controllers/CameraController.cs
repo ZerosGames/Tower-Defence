@@ -19,6 +19,8 @@ public class CameraController : MonoBehaviour {
 
     private Vector3 CameraPosOnMap;
 
+    Vector3 lastPosition;
+
     void Start()
     {
         mapHeight = GameManager.gameManager.GetMapHeight();
@@ -55,6 +57,21 @@ public class CameraController : MonoBehaviour {
         if (Input.GetKey("d") || Input.mousePosition.x >= (Screen.width - mousePanBorder))
         {
             NewCamPos.x += panSpeed * Time.deltaTime;
+        }
+
+        if (Input.GetMouseButtonDown(2))
+        {
+            lastPosition = Input.mousePosition;
+        }
+
+        if (Input.GetMouseButton(2))
+        {
+            Vector3 delta = Input.mousePosition - lastPosition;
+            delta.Normalize();
+
+            NewCamPos.x += -delta.x * panSpeed * Time.deltaTime;
+            NewCamPos.z += -delta.y * panSpeed * Time.deltaTime;
+            lastPosition = Input.mousePosition;
         }
 
         CameraPosOnMap = GetCameraPointOnMap();

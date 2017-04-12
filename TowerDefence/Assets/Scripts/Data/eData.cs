@@ -9,4 +9,6 @@ public class eData {
     public int armourValue;
 
     public int worth;
+
+    public float speed;
 }

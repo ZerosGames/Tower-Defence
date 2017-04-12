@@ -35,11 +35,11 @@ public class PlayerData : MonoBehaviour {
 		
 	}
 
-    public bool purchaseTurretUpgrade(TurretController.TurretUpgradeTypes types, tData _turretData)
+    public bool purchaseTurretUpgrade(TurretUpgradeTypes types, tData _turretData)
     {
         switch (types)
         {
-            case TurretController.TurretUpgradeTypes.Damage:
+            case TurretUpgradeTypes.Damage:
                 if(currentZomnCurrency - _turretData.costToUpgradeDamage < 0)
                 {
                     return false;
@@ -47,7 +47,7 @@ public class PlayerData : MonoBehaviour {
 
                 currentZomnCurrency -= _turretData.costToUpgradeDamage;
                 break;
-            case TurretController.TurretUpgradeTypes.FireRate:
+            case TurretUpgradeTypes.FireRate:
                 if (currentZomnCurrency - _turretData.costToUpgradeFirerate < 0)
                 {
                     return false;
@@ -55,7 +55,7 @@ public class PlayerData : MonoBehaviour {
 
                 currentZomnCurrency -= _turretData.costToUpgradeFirerate;
                 break;
-            case TurretController.TurretUpgradeTypes.Range:
+            case TurretUpgradeTypes.Range:
                 if (currentZomnCurrency - _turretData.costToUpgradeRange < 0)
                 {
                     return false;
@@ -67,7 +67,6 @@ public class PlayerData : MonoBehaviour {
                 break;
         }
 
-        //currentcurrency -= _turretData.costToBuild;
         return true;
     }
 
@@ -79,6 +78,17 @@ public class PlayerData : MonoBehaviour {
         }
 
         currentcurrency -= _turretData.costToBuild;
+        return true;
+    }
+
+    public bool purchaseBuilding(bData _buildingData)
+    {
+        if (currentcurrency - _buildingData.costToBuild < 0)
+        {
+            return false;
+        }
+
+        currentcurrency -= _buildingData.costToBuild;
         return true;
     }
 

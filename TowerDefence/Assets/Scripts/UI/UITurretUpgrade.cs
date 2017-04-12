@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 public class UITurretUpgrade : MonoBehaviour
 {
-    private TurretController SelectedTC;
+    private TurretBase SelectedTC;
     private tData SelectedTCData;
 
     public bool isShowing = false;
@@ -81,27 +81,27 @@ public class UITurretUpgrade : MonoBehaviour
        
     public void UpgradeTurretDamage()
     {
-        if (PlayerData.playerData.purchaseTurretUpgrade(TurretController.TurretUpgradeTypes.Damage, SelectedTCData))
+        if (PlayerData.playerData.purchaseTurretUpgrade(TurretUpgradeTypes.Damage, SelectedTCData))
         {
-            SelectedTC.UpgradeTurret(TurretController.TurretUpgradeTypes.Damage);
+            SelectedTC.UpgradeTurret(TurretUpgradeTypes.Damage);
             UpdateUI();
         }
     }
 
     public void UpgradeTurretFireRate()
     {
-        if (PlayerData.playerData.purchaseTurretUpgrade(TurretController.TurretUpgradeTypes.FireRate, SelectedTCData))
+        if (PlayerData.playerData.purchaseTurretUpgrade(TurretUpgradeTypes.FireRate, SelectedTCData))
         {
-            SelectedTC.UpgradeTurret(TurretController.TurretUpgradeTypes.FireRate);
+            SelectedTC.UpgradeTurret(TurretUpgradeTypes.FireRate);
             UpdateUI();
         }
     }
 
     public void UpgradeTurretRange()
     {
-        if (PlayerData.playerData.purchaseTurretUpgrade(TurretController.TurretUpgradeTypes.Range, SelectedTCData))
+        if (PlayerData.playerData.purchaseTurretUpgrade(TurretUpgradeTypes.Range, SelectedTCData))
         {
-            SelectedTC.UpgradeTurret(TurretController.TurretUpgradeTypes.Range);
+            SelectedTC.UpgradeTurret(TurretUpgradeTypes.Range);
             UpdateUI();
         }
     }
@@ -125,7 +125,7 @@ public class UITurretUpgrade : MonoBehaviour
         isShowing = _show;
     }
 
-    public void SetSelectedTC(TurretController _tc)
+    public void SetSelectedTC(TurretBase _tc)
     {
         SelectedTC = _tc;
     }

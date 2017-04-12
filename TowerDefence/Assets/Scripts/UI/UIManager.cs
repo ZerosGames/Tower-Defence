@@ -22,6 +22,9 @@ public class UIManager : MonoBehaviour {
     private Text BlockCurrencyText;
 
     [SerializeField]
+    private Text zonmIncomeText;
+
+    [SerializeField]
     private Text ZomnCurrencyText;
 
     [Header ("Sprites")]
@@ -53,7 +56,7 @@ public class UIManager : MonoBehaviour {
 
 	void Update ()
     {
-        buildModeText.enabled = BuildManager.BuildManagerInstance.GetBuildingMode();
+        buildModeText.enabled = BuildManager.Instance.GetBuildingMode();
 
         waveTimer.text = References.Refs.spawnerRef.GetWaveTimerText();
 
@@ -79,7 +82,7 @@ public class UIManager : MonoBehaviour {
             {
                 MenuUI.ShowUI(true);
             }
-        }   
+        }
 	}
 
     public void ExitGame()
@@ -155,5 +158,10 @@ public class UIManager : MonoBehaviour {
         OptionsMenu.ShowUI(false);
         turretBuildMenu.ShowUI(false);
         BuildingsBuildMenu.ShowUI(false);
+    }
+
+    public void SetZomnIncomeText(int _text)
+    {
+        zonmIncomeText.text = "+" + _text;
     }
 }

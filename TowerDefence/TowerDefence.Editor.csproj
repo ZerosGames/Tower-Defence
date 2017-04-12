@@ -123,6 +123,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Editor\DisplayNoiseEditor.cs" />
     <Compile Include="Assets\Scripts\Editor\MapGeneratorEditor.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -10,10 +10,14 @@ public class MapGenerator : MonoBehaviour {
 
     [SerializeField]
     public byte[,] mapData;
+    public byte[,] playableMapData;
 
     [Header("MapGen")]
-    public int MapHeight;
-    public int MapWidth;
+    public int MapHeight = 64;
+    public int MapWidth = 64;
+
+    public int playableMapWidth = 22;
+    public int PlayableMapHeight = 22;
 
     public int GridSizeX;
     public int GridSizeY;
@@ -22,6 +26,8 @@ public class MapGenerator : MonoBehaviour {
     public float nodeRadius;
 
     [Header("PathGen")]
+    public GameObject StartPos;
+    public GameObject EndPos;
 
     private Node startNode = new Node();
     private Node endNode = new Node();
@@ -32,28 +38,36 @@ public class MapGenerator : MonoBehaviour {
     [SerializeField]
     public List<Node> Path;
 
-    [Header("MeshGen")]
     [SerializeField]
-    MeshFilter mf;
+    public GameObject waypoint;
 
     [SerializeField]
-    MeshCollider mc;
+    private World world;
 
-    [Header("Load From Texture")]
-    public bool loadFromTexture = false;
+    [SerializeField]
+    GameObject TestText;
+    [SerializeField]
+    GameObject StartPortal;
+    [SerializeField]
+    GameObject EndPortal;
 
-    public Dictionary<int, Texture2D> Maps = new Dictionary<int, Texture2D>();
+    [Header("NoiseGen")]
+    public float noiseScale;
 
-    [Header("Save To Texture")]
-    public string savedPNGName = "";
- 
-    Mesh mesh;
+    public int octaves;
+    public float persistance;
+    public float lacanaity;
 
-    private List<Vector3> verts = new List<Vector3>();
-    protected List<Vector2> uvs = new List<Vector2>();
-    protected List<int> tris = new List<int>();
+    public int seed;
+    public Vector2 Offset;
 
-	void Start ()
+    [Header("Resoucre Gen")]
+    [SerializeField]
+    private int amountOfResoucreNodes;
+    [SerializeField]
+    private GameObject crystalPerfab;
+
+    void Start ()
     {
         InitData();
     }
@@ -69,54 +83,80 @@ public class MapGenerator : MonoBehaviour {
 
         ResetData();
 
-        mesh = new Mesh();
-
         nodeDiameter = nodeRadius * 2;
         GridSizeX = Mathf.RoundToInt(MapWidth / nodeDiameter);
         GridSizeY = Mathf.RoundToInt(MapHeight / nodeDiameter);   
 
-        if (!loadFromTexture)
-        {
-            mapData = new byte[GridSizeX, GridSizeY];
+        mapData = new byte[GridSizeX, GridSizeY];
+        playableMapData = new byte[playableMapWidth, PlayableMapHeight];
 
-            for (int x = 0; x < GridSizeX; x++)
+        for (int x = 0; x < GridSizeX; x++)
+        {
+            for (int y = 0; y < GridSizeY; y++)
             {
-                for (int y = 0; y < GridSizeY; y++)
-                {
-                    mapData[x, y] = 1;
-                }
+                mapData[x, y] = 1;
             }
-
-            mapData = MazeGenerator.CreateMaze(mapData, GridSizeX, GridSizeY, Vector2.one);
-
-            CreateStartAndEndNodes();
-
-            grid = NodeGrid.NodeGridFromByteArray(transform.position, MapWidth, MapHeight, nodeRadius, mapData);
-
-            AssignStartEndNodes();
-
-            GenerateFlowFeild();
-
-            Path = RetracePath();
-
-            ModifyMap(mapData, grid);
         }
-        else
+
+        for (int x = 0; x < playableMapWidth; x++)
         {
-            mapData = LoadFromTexture(2);
-
-            nodeDiameter = nodeRadius * 2;
-
-            MapWidth = mapData.GetLength(0) * (int)nodeDiameter;
-            MapHeight = mapData.GetLength(1) * (int)nodeDiameter;
-
-            grid = NodeGrid.NodeGridFromByteArray(transform.position, MapWidth, MapHeight, nodeRadius, mapData);
+            for (int y = 0; y < PlayableMapHeight; y++)
+            { 
+                playableMapData[x, y] = 1;
+            }
         }
 
-        GenerateMapMesh();
+        playableMapData = MazeGenerator.CreateMaze(playableMapData, playableMapWidth, PlayableMapHeight, Vector2.one);
 
+        CreateStartAndEndNodes(playableMapData);
+
+        for (int x = 0; x < playableMapWidth; x++)
+        {
+            for (int y = 0; y < PlayableMapHeight; y++)
+            {                    
+                mapData[x + playableMapWidth, y + PlayableMapHeight] = playableMapData[x, y];
+            }
+        }
+
+
+        grid = NodeGrid.NodeGridFromByteArray(transform.position, mapData, MapWidth, MapHeight, nodeDiameter, nodeRadius);
+
+        //print("NodeGrid: " + sw.ElapsedMilliseconds + " ms");
+
+        AssginStartEndNodes();
+
+        //print("StartEndPoints: " + sw.ElapsedMilliseconds + " ms");
+
+        GenerateFlowFeild();
+
+        //print("VectorFeild: " + sw.ElapsedMilliseconds + " ms");
+
+        Path = RetracePath();
+
+        //print("Path: " + sw.ElapsedMilliseconds + " ms");
+
+        ModifyMap(mapData, grid);
+
+        //print("Change Map Data: " + sw.ElapsedMilliseconds + " ms");
+
+        SetupStartEnd();
+
+        //print("Excavated Map: " + sw.ElapsedMilliseconds + " ms");
+
+        GenerateFlowFeild(grid);
+
+        //print("Flow Feild: " + sw.ElapsedMilliseconds + " ms");
+
+        Resourses();
+
+        //print("Spawned resoucre" + sw.ElapsedMilliseconds + "ms");
+
+        world.UpdateChucks();
+
+        UpdateChunkData();
+        
         sw.Stop();
-        print(sw.ElapsedMilliseconds + " ms");
+        print("Entire Gen: " + sw.ElapsedMilliseconds + " ms");
     }
 
     /// <summary>
@@ -124,100 +164,8 @@ public class MapGenerator : MonoBehaviour {
     /// </summary>
     void ResetData()
     {
-        mesh = null;
         grid = null;
         mapData = null;
-
-        mf.mesh = null;
-        mc.sharedMesh = null;
-
-        verts.Clear();
-        uvs.Clear();
-        tris.Clear();
-    }
-	
-    /// <summary>
-    /// Generates a blocky mesh base on the MapGeneration byte array; 
-    /// </summary>
-    void GenerateMapMesh()
-    {
-        for (int x = 0; x < GridSizeX; x++)
-        {
-            for (int z = 0; z < GridSizeY; z++)
-            {
-                if (mapData[x, z] == 0) continue;
-
-                Vector3 pos = new Vector3(grid[x,z].WorldPos.x - nodeRadius, 0, grid[x, z].WorldPos.z - nodeRadius);
-
-                //Top Face;
-                    CreateTile(pos, Vector3.forward * nodeDiameter, Vector3.right * nodeDiameter, Vector3.up * nodeRadius, true, verts, tris, uvs);
-
-                //Left Face;
-                if (isTransparent(x - 1, z))
-                    CreateTile(pos, Vector3.up * nodeDiameter, Vector3.forward * nodeDiameter, Vector3.down * nodeRadius, false, verts, tris, uvs);
-
-                //right Face;
-                if (isTransparent(x + 1, z))
-                    CreateTile(pos, Vector3.up * nodeDiameter, Vector3.forward * nodeDiameter, Vector3.right * nodeRadius * 2 + Vector3.down * nodeRadius, true, verts, tris, uvs);
-
-                //Back Face;
-                if (isTransparent(x, z + 1))
-                    CreateTile(pos, Vector3.up * nodeDiameter, Vector3.right * nodeDiameter, Vector3.down * nodeRadius + Vector3.forward * nodeDiameter, false, verts, tris, uvs);
-
-                //Front Face;
-                if (isTransparent(x, z - 1))
-                    CreateTile(pos, Vector3.up * nodeDiameter, Vector3.right * nodeDiameter, Vector3.down * nodeRadius, true, verts, tris, uvs);
-            }
-        }
-
-        mesh.vertices = verts.ToArray();
-        mesh.uv = uvs.ToArray();
-        mesh.triangles = tris.ToArray();
-
-        mesh.RecalculateNormals();
-        mf.mesh = mesh;
-
-        mesh.RecalculateBounds();
-        mc.sharedMesh = mesh;
-        
-    }
-
-    /// <summary>
-    /// Creates a single quad for the mesh
-    /// </summary>
-    void CreateTile(Vector3 _corner, Vector3 _up, Vector3 _right, Vector3 offset, bool reversed, List<Vector3> _verts, List<int> _tris, List<Vector2> _uvs)
-    {
-        int index = _verts.Count;
-
-        _verts.Add(_corner + offset);
-        _verts.Add(_corner + _up + offset);
-        _verts.Add(_corner + _up + _right + offset);
-        _verts.Add(_corner + _right + offset);
-
-        uvs.Add(new Vector2(0, 0));
-        uvs.Add(new Vector2(0, 1));
-        uvs.Add(new Vector2(1, 1));
-        uvs.Add(new Vector2(1, 0));
-
-        if (reversed)
-        {
-            tris.Add(index + 0);
-            tris.Add(index + 1);
-            tris.Add(index + 2);
-            tris.Add(index + 2);
-            tris.Add(index + 3);
-            tris.Add(index + 0);
-        }
-        else
-        {
-            tris.Add(index + 1);
-            tris.Add(index + 0);
-            tris.Add(index + 2);
-            tris.Add(index + 3);
-            tris.Add(index + 2);
-            tris.Add(index + 0);
-        }
-
     }
 
     /// <summary>
@@ -249,109 +197,163 @@ public class MapGenerator : MonoBehaviour {
     /// <summary>
     /// Randomly Places the start and end nodes.
     /// </summary>
-    void CreateStartAndEndNodes()
+    void CreateStartAndEndNodes(byte[,] _mapData)
     {
         bool noPath = false;
 
         int NESW = Random.Range(0, 3);
-        int randX = Random.Range(1, GridSizeX - 2);
-        int randY = Random.Range(1, GridSizeY - 2);
+        int randX = Random.Range(1, playableMapWidth - 2);
+        int randY = Random.Range(1, PlayableMapHeight - 2);
 
-        if (randY != 0 || randX != 0 || randY != GridSizeY - 1 || randX != GridSizeX - 1)
+        if (randY != 0 || randX != 0 || randY != PlayableMapHeight - 1 || randX != playableMapWidth - 1)
         {
 
             switch (NESW)
             {
                 //top
                 case 0:
-                    if (mapData[randX, GridSizeY - 2] == 1 || mapData[GridSizeX - 2, randY] == 1)
+                    if (mapData[randX, PlayableMapHeight - 2] == 1 || mapData[playableMapWidth - randX, 0] == 1)
                     {
                         noPath = true;
                         break;
                     }
-      
-                    mapData[randX, GridSizeY - 1] = 0;
-                    mapData[GridSizeX - 1, randY] = 0;
+
+                    _mapData[randX, PlayableMapHeight - 1] = 0;
+                    _mapData[playableMapWidth - randX, 0] = 0;
 
                     SXIndex = randX;
-                    SYIndex = GridSizeY - 1;
+                    SYIndex = PlayableMapHeight - 1;
 
-                    EXIndex = GridSizeX - 1;
-                    EYIndex = randY;
+                    EXIndex = playableMapWidth - randX;
+                    EYIndex = 0;
 
                     break;
                 //Bottom
                 case 1:
 
-                    if (mapData[randX, 1] == 1 || mapData[1, randY] == 1)
+                    if (_mapData[randX, 1] == 1 || _mapData[playableMapWidth - randX, PlayableMapHeight - 2] == 1)
                     {
                         noPath = true;
                         break;
                     }
 
-                    mapData[randX, 0] = 0;
-                    mapData[0, randY] = 0;
+                    _mapData[randX, 0] = 0;
+                    _mapData[playableMapWidth - randX, PlayableMapHeight - 2] = 0;
 
                     SXIndex = randX;
                     SYIndex = 0;
 
-                    EXIndex = 0;
-                    EYIndex = randY;
+                    EXIndex = playableMapWidth - randX;
+                    EYIndex = PlayableMapHeight - 2;
                     break;
                 //Left
                 case 2:
-                    if (mapData[1, randY] == 1 || mapData[randX, 1] == 1)
+                    if (_mapData[1, randY] == 1 || _mapData[playableMapWidth - 2, PlayableMapHeight - randY] == 1)
                     {
                         noPath = true;
                         break;
                     }
 
-                    mapData[0, randY] = 0;
-                    mapData[randX, 0] = 0;
+                    _mapData[0, randY] = 0;
+                    _mapData[playableMapWidth - 2, PlayableMapHeight - randY] = 0;
 
                     SXIndex = 0;
                     SYIndex = randY;
 
-                    EXIndex = randX;
-                    EYIndex = 0;
+                    EXIndex = playableMapWidth - 2;
+                    EYIndex = PlayableMapHeight - randY;
                     break;
                 //right        
                 case 3:
-                    if (mapData[GridSizeX - 2, randY] == 1 || mapData[randX, GridSizeY - 2] == 1)
+                    if (_mapData[playableMapWidth - 2, randY] == 1 || _mapData[1, randY] == 1)
                     {
                         noPath = true;
                         break;
                     }
 
-                    mapData[GridSizeX - 1, randY] = 0;
-                    mapData[randX, GridSizeY - 1] = 0;
+                    _mapData[playableMapWidth - 1, randY] = 0;
+                    _mapData[1, PlayableMapHeight - randY] = 0;
 
-                    SXIndex = GridSizeX - 1;
+                    SXIndex = playableMapWidth - 1;
                     SYIndex = randY;
 
-                    EXIndex = randX;
-                    EYIndex = GridSizeY - 1;
+                    EXIndex = 1;
+                    EYIndex = PlayableMapHeight - randY;
                     break;
             }
         }
         else
         {
-            CreateStartAndEndNodes();
+            CreateStartAndEndNodes(_mapData);
+            return;
         }
 
         if (noPath)
         {
-            CreateStartAndEndNodes();
+            CreateStartAndEndNodes(_mapData);
+            return;
         }
     }
 
-    /// <summary>
-    /// Sets the node for the start and end byte.
-    /// </summary>
-    void AssignStartEndNodes()
+    void AssginStartEndNodes()
     {
-        startNode = NodeGrid.GetNodeFromByteArray(grid, SXIndex, SYIndex);
-        endNode = NodeGrid.GetNodeFromByteArray(grid, EXIndex, EYIndex);
+        startNode = NodeGrid.GetNodeFromByteArray(grid, SXIndex + playableMapWidth, SYIndex + PlayableMapHeight);
+        endNode = NodeGrid.GetNodeFromByteArray(grid, EXIndex + playableMapWidth, EYIndex + PlayableMapHeight);
+    }
+
+    void SetupStartEnd()
+    {
+        if(startNode != null && endNode != null)
+        {
+            List<Node> OpenSet = new List<Node>();
+            OpenSet.Add(startNode);
+            OpenSet.Add(endNode);
+
+            foreach (Node n in GetNeighbouringNodes(startNode, GridSizeX, GridSizeY))
+            {
+                OpenSet.Add(n);
+            }
+
+            foreach (Node n in GetNeighbouringNodes(endNode, GridSizeX, GridSizeY))
+            {
+                OpenSet.Add(n);
+            }
+
+            foreach (Node n in OpenSet)
+            {
+                n.Placeable = false;
+                n.Walkable = true;
+            }
+
+            Vector3 startPortal = new Vector3(startNode.WorldPos.x, -0.5f, startNode.WorldPos.z);
+            Vector3 endPortal = new Vector3(endNode.WorldPos.x, -0.5f, endNode.WorldPos.z);
+
+            Quaternion q = new Quaternion();
+
+            if(Path[1].gridX > startNode.gridX || Path[1].gridX < startNode.gridX)
+            {
+                q = Quaternion.AngleAxis(90, Vector3.up);
+            }
+
+            if(Path[1].gridY > startNode.gridY || Path[1].gridY < startNode.gridY)
+            {
+                q = Quaternion.AngleAxis(0, Vector3.up);
+            }
+
+            Instantiate(StartPortal, startPortal, q);
+
+            if (Path[Path.Count - 2].gridX > endNode.gridX || Path[Path.Count - 2].gridX < endNode.gridX)
+            {
+                q = Quaternion.AngleAxis(90, Vector3.up);
+            }
+
+            if (Path[Path.Count - 2].gridY > endNode.gridY || Path[Path.Count - 2].gridY < endNode.gridY)
+            {
+                q = Quaternion.AngleAxis(0, Vector3.up);
+            }
+
+            Instantiate(EndPortal, endPortal, q);
+        }
     }
 
     /// <summary>
@@ -369,7 +371,7 @@ public class MapGenerator : MonoBehaviour {
         {
             Node Current = Frontier.Dequeue();
 
-            List<Node> NeighbouringNodes = GetNSEWNeighbouringNodes(Current, GridSizeX, GridSizeY);
+            List<Node> NeighbouringNodes = GetNSEWNeighbouringNodes(Current, MapWidth, MapHeight);
 
             foreach (Node _node in NeighbouringNodes)
             {
@@ -394,6 +396,84 @@ public class MapGenerator : MonoBehaviour {
                 Marked.Add(_node);
             }
         }
+    }
+
+    void GenerateFlowFeild(Node[,] _grid)
+    {
+        Queue<Node> Frontier = new Queue<Node>();
+        List<Node> Marked = new List<Node>();
+
+        foreach (Node n in _grid)
+        {
+            n.pathDistance = 0;
+
+            if (n.Walkable)
+            {
+                Frontier.Enqueue(n);
+            }
+        }
+
+        while (Frontier.Count > 0)
+        {
+            Node Current = Frontier.Dequeue();
+            Marked.Add(Current);
+
+            List<Node> NeighbouringNodes = GetNSEWNeighbouringNodes(Current, GridSizeX, GridSizeY);
+
+            foreach (Node _node in NeighbouringNodes)
+            {
+                if (Marked.Contains(_node) || _node.Walkable)
+                {
+                    if (_node.Placeable == false)
+                    {
+                        _node.pathDistance = 0;
+                    }
+
+                    continue;
+                }
+                else
+                {
+                    _node.pathDistance = 0;
+                    _node.parent = null;
+                }
+
+                _node.pathDistance += (Current.pathDistance + 1);
+                _node.parent = Current;
+                Frontier.Enqueue(_node);
+                Marked.Add(_node);
+            }
+        }
+    }
+
+    public float[,] GenerateNoiseMap()
+    {
+        float[,] noiseMap2 = PerlinNoise.GenerateNoiseMap(MapWidth, MapHeight, seed, noiseScale, octaves, persistance, lacanaity, Offset);
+
+        float[,] noiseMap = new float[MapWidth, MapHeight];
+
+        int maxNoiseHeight = int.MinValue;
+
+        for (int x = 0; x < grid.GetLength(0); x++)
+        {
+            for (int y = 0; y < grid.GetLength(1); y++)
+            {
+                if (grid[x, y].pathDistance > maxNoiseHeight)
+                {
+                    maxNoiseHeight = grid[x, y].pathDistance;
+                }
+            }
+        }
+
+        for (int x = 0; x < grid.GetLength(0); x++)
+        {
+            for (int y = 0; y < grid.GetLength(1); y++)
+            {
+                noiseMap[x, y] = (float)grid[x, y].pathDistance / (float)maxNoiseHeight;
+                noiseMap[x, y] *= noiseMap2[x, y];
+            }
+        }
+
+        return noiseMap;
     }
 
     /// <summary>
@@ -457,6 +537,58 @@ public class MapGenerator : MonoBehaviour {
         return Neighbours;
     }
 
+    private List<Node> GetNeighbouringNodes(Node _node, int _width, int _heigth)
+    {
+        List<Node> Neighbours = new List<Node>();
+
+        for (int x = -1; x <= 1; x++)
+        {
+            for (int y = -1; y <= 1; y++)
+            {
+                if (x == 0 && y == 0)
+                {
+                    continue;
+                }
+
+                int CheckX = _node.gridX + x;
+                int CheckY = _node.gridY + y;
+
+                if (CheckX >= 0 && CheckX < _width && CheckY >= 0 && CheckY < _heigth)
+                {
+                    Neighbours.Add(grid[CheckX, CheckY]);
+                }
+            }
+        }
+
+        return Neighbours;
+    }
+
+    void UpdateChunkData() 
+    {
+        foreach (Node n in grid)
+        {
+            if (Path.Contains(n))
+            {
+                if (world.GetBlock((int)n.WorldPos.x, (int)n.WorldPos.y, (int)n.WorldPos.z).GetType() == typeof(BlockGrass))
+                {
+                    world.SetBlock((int)n.WorldPos.x, (int)n.WorldPos.y, (int)n.WorldPos.z, new BlockPath());
+                }
+            }
+            else if (n.CrystalNode)
+            {
+                for (int y = 0; y < 32; y++)
+                {
+                    if (world.GetBlock((int)n.WorldPos.x, (int)n.WorldPos.y + y, (int)n.WorldPos.z).GetType() == typeof(BlockAir))
+                    {
+                        world.SetBlock((int)n.WorldPos.x, (int)n.WorldPos.y + y - 1, (int)n.WorldPos.z, new BlockCyrstal());
+                        Instantiate(crystalPerfab, new Vector3(n.WorldPos.x, (n.WorldPos.y + y - 1) + 0.5f, n.WorldPos.z), Quaternion.identity);
+                        break;
+                    }
+                }
+            } 
+        }
+    }
+
     void ModifyMap(byte[,] _mapData, Node[,] _grid)
     {
         foreach (Node n in _grid)
@@ -472,82 +604,31 @@ public class MapGenerator : MonoBehaviour {
         }
     }
 
-    public void SaveToTexture(byte [,] _mapData, string _textureName, int _gridSizeX, int _gridSizeY)
+    void SpawnResoucres()
     {
-        Texture2D Tex = new Texture2D(GridSizeX,GridSizeY,TextureFormat.RGB24, false);
+        int randGridX = Random.Range(0, GridSizeX - 1);
+        int randGridY = Random.Range(0, GridSizeY - 1);
 
-        for (int x = 0; x < _gridSizeX; x++)
+        if (grid[randGridX, randGridY].Walkable == true || grid[randGridX, randGridY].pathDistance < 5)
         {
-            for (int y = 0; y < _gridSizeY; y++)
-            {
-                if (_mapData[x, y] == 1)
-                {
-                    Tex.SetPixel(x, y, Color.black);
-                }
-                else
-                {
-                    Tex.SetPixel(x, y, Color.white);
-                }
-            }
+            SpawnResoucres();
+            return;
         }
 
-        byte[] Texture = Tex.EncodeToPNG();
-        FileStream file = File.Open(Application.dataPath + "/" + "Maps" + "/" + _textureName, FileMode.CreateNew);
-        BinaryWriter binary = new BinaryWriter(file);
-        binary.Write(Texture);
-        file.Close();
-        DestroyImmediate(Tex);
+        grid[randGridX, randGridY].CrystalNode = true;
+        grid[randGridX, randGridY].Placeable = false;
     }
 
-    public void LoadAllTextures()
+    void Resourses()
     {
-        int i = 0;
-        Maps.Clear();
-
-        foreach (Texture2D tex in Resources.LoadAll<Texture2D>("Maps"))
+        for (int i = 0; i < amountOfResoucreNodes; i++)
         {
-            Maps.Add(i, tex);
-            i++;
+            SpawnResoucres();
         }
-
-        i = 0;
     }
-
-    byte[,] LoadFromTexture(int _texIndex)
-    {  
-        Texture2D tex = Maps[_texIndex];
-        tex.mipMapBias = 0;
-        byte[,] _mapData = new byte[tex.width, tex.height];
-        byte[] _textureData = tex.GetRawTextureData();
-        Color _color = new Color();
-
-
-        GridSizeX = tex.width;
-        GridSizeY = tex.height;
-
-
-        for (int x = 0; x < tex.width; x++)
-        {
-            for (int y = 0; y < tex.height; y++)
-            {
-                _color = tex.GetPixel(x, y);
-
-                if (_color == Color.black)
-                {
-                    _mapData[x, y] = 1;
-                }
-                else
-                {
-                    _mapData[x, y] = 0;
-                }
-            }
-        }
-
-        return _mapData;
-    } 
 
     void OnDrawGizmos()
-    {
+    { 
         Gizmos.DrawWireCube(transform.position, new Vector3(MapWidth, 0, MapHeight));
 
         if (grid != null)
@@ -559,7 +640,7 @@ public class MapGenerator : MonoBehaviour {
                 {
                     if (Path == null || !Path.Contains(n))
                     {
-                        if (!n.Placeable && !n.Walkable)
+                        if (!n.Placeable && !n.Walkable && !n.CrystalNode)
                         {
                             Gizmos.color = Color.red;
                         }
@@ -573,6 +654,11 @@ public class MapGenerator : MonoBehaviour {
                         {
                             Gizmos.color = Color.magenta;
                         }
+                        else if(n.CrystalNode)
+                        {
+                            Gizmos.color = Color.yellow;
+                        }
+
                         Gizmos.DrawCube(n.WorldPos, new Vector3(nodeDiameter - 0.2f, nodeDiameter - 0.2f, nodeDiameter - 0.2f));
                     }
                     else

@@ -21,7 +21,7 @@ public class UITurretBuildMenu : MonoBehaviour {
     void Start ()
     {
         Anim = GetComponent<Animator>();
-        buildManager = BuildManager.BuildManagerInstance;
+        buildManager = BuildManager.Instance;
 
         SetCostDisplays();
     }
@@ -29,7 +29,7 @@ public class UITurretBuildMenu : MonoBehaviour {
     public void ShowUI(bool _show)
     {
         IsShowing = _show;
-        BuildManager.BuildManagerInstance.SetBuildMode(_show);
+        BuildManager.Instance.SetBuildMode(_show);
         Anim.SetBool("inBuildingMode", _show);
     }
 
@@ -60,7 +60,7 @@ public class UITurretBuildMenu : MonoBehaviour {
 
             if (TurretToBuild)
             {
-                TurretController TurretToBuildController = TurretToBuild.GetComponent<TurretController>();
+                TurretBase TurretToBuildController = TurretToBuild.GetComponent<TurretBase>();
 
                 SelectedTurretStats.Setdamage(TurretToBuildController.GetTurretData().tDamage);
                 SelectedTurretStats.SetFireRate(TurretToBuildController.GetTurretData().tFireRate);

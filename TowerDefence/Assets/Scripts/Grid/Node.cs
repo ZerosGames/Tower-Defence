@@ -7,8 +7,11 @@ public class Node
     public int gridX;
     public int gridY;
     public Vector3 WorldPos;
+
     public bool Placeable;
     public bool Walkable;
+    public bool CrystalNode;
+
     public int pathDistance;
     public Node parent;
     public int pathingWeight;
