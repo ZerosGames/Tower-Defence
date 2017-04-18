@@ -7,15 +7,9 @@ public class CrystalMine : MonoBehaviour
 
     public int zonmCrystalPerSecond = 1;
 
-    PlayerData playerData;
-
     [SerializeField]
     private bData buildingData = new bData();
     
-    void Start()
-    {
-        playerData = PlayerData.playerData;
-    }
 
 	public void StartMining ()
     {
@@ -24,7 +18,7 @@ public class CrystalMine : MonoBehaviour
 	
     void MineCrystal()
     {
-        playerData.currentZomnCurrency += zonmCrystalPerSecond;
+        References.Refs.playerData.currentZomnCurrency += zonmCrystalPerSecond;
     }
 
     public bData GetBuildingData()

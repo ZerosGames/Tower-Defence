@@ -81,7 +81,7 @@ public class UITurretUpgrade : MonoBehaviour
        
     public void UpgradeTurretDamage()
     {
-        if (PlayerData.playerData.purchaseTurretUpgrade(TurretUpgradeTypes.Damage, SelectedTCData))
+        if (References.Refs.playerData.purchaseTurretUpgrade(TurretUpgradeTypes.Damage, SelectedTCData))
         {
             SelectedTC.UpgradeTurret(TurretUpgradeTypes.Damage);
             UpdateUI();
@@ -90,7 +90,7 @@ public class UITurretUpgrade : MonoBehaviour
 
     public void UpgradeTurretFireRate()
     {
-        if (PlayerData.playerData.purchaseTurretUpgrade(TurretUpgradeTypes.FireRate, SelectedTCData))
+        if (References.Refs.playerData.purchaseTurretUpgrade(TurretUpgradeTypes.FireRate, SelectedTCData))
         {
             SelectedTC.UpgradeTurret(TurretUpgradeTypes.FireRate);
             UpdateUI();
@@ -99,7 +99,7 @@ public class UITurretUpgrade : MonoBehaviour
 
     public void UpgradeTurretRange()
     {
-        if (PlayerData.playerData.purchaseTurretUpgrade(TurretUpgradeTypes.Range, SelectedTCData))
+        if (References.Refs.playerData.purchaseTurretUpgrade(TurretUpgradeTypes.Range, SelectedTCData))
         {
             SelectedTC.UpgradeTurret(TurretUpgradeTypes.Range);
             UpdateUI();

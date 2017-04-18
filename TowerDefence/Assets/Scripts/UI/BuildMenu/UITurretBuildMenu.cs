@@ -21,22 +21,20 @@ public class UITurretBuildMenu : MonoBehaviour {
     void Start ()
     {
         Anim = GetComponent<Animator>();
-        buildManager = BuildManager.Instance;
-
         SetCostDisplays();
     }
 
     public void ShowUI(bool _show)
     {
         IsShowing = _show;
-        BuildManager.Instance.SetBuildMode(_show);
+        References.Refs.buildManager.SetBuildMode(_show);
         Anim.SetBool("inBuildingMode", _show);
     }
 
     public void turretSelected(int _type)
     {
-        
-        buildManager.SetTurretToBuild(References.Refs.GetTurret(_type));
+
+        References.Refs.buildManager.SetTurretToBuild(References.Refs.GetTurret(_type));
     }
 
     void SetCostDisplays()

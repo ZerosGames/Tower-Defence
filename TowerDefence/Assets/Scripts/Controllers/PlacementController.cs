@@ -4,7 +4,7 @@ using UnityEngine.EventSystems;
 
 public class PlacementController : MonoBehaviour {
 
-    BuildManager buildManager;
+    
     public LayerMask rayMask;
     private GameObject turretToPlace;
 
@@ -20,42 +20,49 @@ public class PlacementController : MonoBehaviour {
 
     private bool placementBlocked = false;
 
-    [SerializeField]
-    private UIManager uiManager;
+    //Cached Objects//
+    UIManager uiManager;
+    BuildManager buildManager;
+    PlayerData playerData;
 
-    void Start()
+    public void InitData()
     {
-        buildManager = BuildManager.Instance;
+        buildManager = References.Refs.buildManager;
+        playerData = References.Refs.playerData;
+        uiManager = References.Refs.UIManger;
     }
 
     void Update()
     {
-        if (buildManager.GetBuildingMode() && buildManager.GetTurretToBuild() != null && buildManager.GetBuildingMode() && buildManager.GetBuildingToBuild() == null)
+        if (GameManager.gameManager.gameState == GameManager.GameState.Playing)
         {
-            if(turretToPlace == null)
+            if (buildManager.GetBuildingMode() && buildManager.GetTurretToBuild() != null && buildManager.GetBuildingMode() && buildManager.GetBuildingToBuild() == null)
             {
-                turretToPlace = Instantiate(buildManager.GetTurretToBuild(), new Vector3(0, -10, 0), Quaternion.identity) as GameObject;
+                if (turretToPlace == null)
+                {
+                    turretToPlace = Instantiate(buildManager.GetTurretToBuild(), new Vector3(0, -10, 0), Quaternion.identity) as GameObject;
+                }
+
+                HandlePlacingTurret(turretToPlace);
+            }
+            else if (turretToPlace != null)
+            {
+                CancelTurretPlacement();
             }
 
-            HandlePlacingTurret(turretToPlace);
-        }
-        else if(turretToPlace != null)
-        {
-            CancelTurretPlacement();
-        }
-
-        if (buildManager.GetBuildingMode() && buildManager.GetTurretToBuild() == null && buildManager.GetBuildingMode() && buildManager.GetBuildingToBuild() != null)
-        {
-            if (buildingToPlace == null)
+            if (buildManager.GetBuildingMode() && buildManager.GetTurretToBuild() == null && buildManager.GetBuildingMode() && buildManager.GetBuildingToBuild() != null)
             {
-                buildingToPlace = Instantiate(buildManager.GetBuildingToBuild(), new Vector3(0, -10, 0), Quaternion.identity) as GameObject;
-            }
+                if (buildingToPlace == null)
+                {
+                    buildingToPlace = Instantiate(buildManager.GetBuildingToBuild(), new Vector3(0, -10, 0), Quaternion.identity) as GameObject;
+                }
 
-            HandlePlacingBuilding(buildingToPlace);
-        }
-        else if (buildingToPlace != null)
-        {
-            CancelBuildingPlacement();
+                HandlePlacingBuilding(buildingToPlace);
+            }
+            else if (buildingToPlace != null)
+            {
+                CancelBuildingPlacement();
+            }
         }
     }
 
@@ -82,7 +89,7 @@ public class PlacementController : MonoBehaviour {
                 {
                     if (InputManager.GetShiftButtonPressed())
                     {
-                        if (PlayerData.playerData.purchaseBuilding(buildingToPlace.GetComponent<CrystalMine>().GetBuildingData()))
+                        if (playerData.purchaseBuilding(buildingToPlace.GetComponent<CrystalMine>().GetBuildingData()))
                         {
                             shiftPlaceBuiling(hitNode);
                             hitNode.Placeable = false;
@@ -90,7 +97,7 @@ public class PlacementController : MonoBehaviour {
                     }
                     else
                     {
-                        if (PlayerData.playerData.purchaseBuilding(buildingToPlace.GetComponent<CrystalMine>().GetBuildingData()))
+                        if (playerData.purchaseBuilding(buildingToPlace.GetComponent<CrystalMine>().GetBuildingData()))
                         {
                             placeBuiling(hitNode);
                             hitNode.Placeable = false;
@@ -133,7 +140,7 @@ public class PlacementController : MonoBehaviour {
                 {
                     if (InputManager.GetShiftButtonPressed())
                     {
-                        if (PlayerData.playerData.purchaseTurret(turretToPlace.GetComponent<TurretBase>().GetTurretData()))
+                        if (playerData.purchaseTurret(turretToPlace.GetComponent<TurretBase>().GetTurretData()))
                         {
                             ShiftPlaceTurret(hitNode);
                             hitNode.Placeable = false;
@@ -141,7 +148,7 @@ public class PlacementController : MonoBehaviour {
                     }
                     else
                     {
-                        if (PlayerData.playerData.purchaseTurret(turretToPlace.GetComponent<TurretBase>().GetTurretData()))
+                        if (playerData.purchaseTurret(turretToPlace.GetComponent<TurretBase>().GetTurretData()))
                         {
                             placeTurret(hitNode);
                             hitNode.Placeable = false;
@@ -226,7 +233,7 @@ public class PlacementController : MonoBehaviour {
         {
             if (hitInfo.collider.gameObject.layer == 9)
             {
-                Node hitNode = NodeGrid.NodeFromWorldPos(hitInfo.point, mapGrid.grid, mapGrid.MapWidth, mapGrid.MapWidth, mapGrid.GridSizeX, mapGrid.GridSizeY);
+                //Node hitNode = NodeGrid.NodeFromWorldPos(hitInfo.point, mapGrid.grid, mapGrid.MapWidth, mapGrid.MapWidth, mapGrid.GridSizeX, mapGrid.GridSizeY);
 
                 _HitNode = hitInfo;
                 return true;

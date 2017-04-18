@@ -17,34 +17,31 @@ public class MouseManager : MonoBehaviour
 
     MouseInputStates MInputStates;
 
-    // Use this for initialization
-    void Start()
-    {
-
-    }
-
     // Update is called once per frame
     void Update()
     {
-        if(BuildManager.Instance.GetBuildingMode())
+        if (GameManager.gameManager.gameState == GameManager.GameState.Playing)
         {
-            MInputStates = MouseInputStates.BuildingMode;
-        }
-        else
-        {
-            MInputStates = MouseInputStates.ThirdPersonMode;
-        }
+            if (References.Refs.buildManager.GetBuildingMode())
+            {
+                MInputStates = MouseInputStates.BuildingMode;
+            }
+            else
+            {
+                MInputStates = MouseInputStates.ThirdPersonMode;
+            }
 
-        switch (MInputStates)
-        {
-            case MouseInputStates.ThirdPersonMode:
-                HandleThirdPersonMInput();
-                break;
-            case MouseInputStates.BuildingMode:
-                break;
-            default:
-                break;
-        }       
+            switch (MInputStates)
+            {
+                case MouseInputStates.ThirdPersonMode:
+                    HandleThirdPersonMInput();
+                    break;
+                case MouseInputStates.BuildingMode:
+                    break;
+                default:
+                    break;
+            }
+        }     
     }
 
     bool FireRayCast(LayerMask _mask, out GameObject _hitObject)

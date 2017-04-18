@@ -56,31 +56,34 @@ public class UIManager : MonoBehaviour {
 
 	void Update ()
     {
-        buildModeText.enabled = BuildManager.Instance.GetBuildingMode();
-
-        waveTimer.text = References.Refs.spawnerRef.GetWaveTimerText();
-
-        waveNumber.text = References.Refs.spawnerRef.GetWaveText();
-
-        BlockCurrencyText.text = PlayerData.playerData.GetCurrencyText();
-
-        ZomnCurrencyText.text = PlayerData.playerData.GetZomnCurrencyText();
-
-        livesText.text = GameManager.gameManager.GetLivesText();
-
-        if(Input.GetKeyDown(KeyCode.Escape))
+        if (GameManager.gameManager.gameState == GameManager.GameState.Playing)
         {
-            if(MenuUI.isActiveAndEnabled)
+            buildModeText.enabled = References.Refs.buildManager.GetBuildingMode();
+
+            waveTimer.text = References.Refs.spawnerRef.GetWaveTimerText();
+
+            waveNumber.text = References.Refs.spawnerRef.GetWaveText();
+
+            BlockCurrencyText.text = References.Refs.playerData.GetCurrencyText();
+
+            ZomnCurrencyText.text = References.Refs.playerData.GetZomnCurrencyText();
+
+            livesText.text = GameManager.gameManager.GetLivesText();
+
+            if (Input.GetKeyDown(KeyCode.Escape))
             {
-                MenuUI.ShowUI(false);
-            }
-            else if(OptionsMenu.isActiveAndEnabled)
-            {
-                OptionsMenu.ShowUI(false);
-            }
-            else
-            {
-                MenuUI.ShowUI(true);
+                if (MenuUI.isActiveAndEnabled)
+                {
+                    MenuUI.ShowUI(false);
+                }
+                else if (OptionsMenu.isActiveAndEnabled)
+                {
+                    OptionsMenu.ShowUI(false);
+                }
+                else
+                {
+                    MenuUI.ShowUI(true);
+                }
             }
         }
 	}

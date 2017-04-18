@@ -13,7 +13,7 @@ public class BlockSnow : Block {
     {
         Tile tile = new Tile();
 
-        tile.x = 2;
+        tile.x = 3;
         tile.y = 0;
 
         return tile;

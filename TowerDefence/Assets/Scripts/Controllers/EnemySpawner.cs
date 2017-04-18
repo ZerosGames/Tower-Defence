@@ -11,29 +11,63 @@ public class EnemySpawner : MonoBehaviour {
     public static int enemyAlive = 0;
     public float timeBetweenWaves = 5f;
 
-    private float countDown = 2f;
+    private float countDown = 30f;
     private int waveIndex = 0;
+    private int queuedWaveIndex = 0;
     private float waveDifficulty;
-    private Wave nextWave;
+    private float timeBetweenEnemySpawns = 0.8f;
+
+    float EnemysSpawn;
+
+    [SerializeField]
+    private Wave _nextWave;
+    private Wave CurrentWave;
     private bool startNextWave = false;
     private bool isSpawningWaves = false;
 
     [SerializeField]
     GameObject enemyRoot;
 
+    [SerializeField]
+    public Queue<Wave> wavesToSpawn = new Queue<Wave>();
+
+    public bool finisheWave = true;
+
     void Update()
     {
-        if (enemyAlive > 0 && !startNextWave)
-            return;
+        HandleWaves();
+    }
 
-        if (!GameManager.gameManager.GetPause())
+    void HandleWaves()
+    {
+        if (!GameManager.gameManager.GetPause() && isSpawningWaves)
         {
-            if (isSpawningWaves)
+            if (wavesToSpawn.Count > 0)
             {
-                if (countDown <= 0 || startNextWave)
+                if (finisheWave)
                 {
-                    StartCoroutine(SpawnWave(GenerateNextWave()));
-                    countDown = timeBetweenWaves;
+                    waveIndex++;
+                    CurrentWave = wavesToSpawn.Dequeue();
+                    StartCoroutine(SpawnWave(CurrentWave));
+                }
+
+                return;
+            }
+            else if (enemyAlive <= 0)
+            {
+                if (countDown <= 0 || startNextWave && wavesToSpawn.Count <= 0)
+                {
+                    _nextWave = GenerateNextWave();
+                    wavesToSpawn.Enqueue(_nextWave);
+
+                    if (finisheWave)
+                    {
+                        waveIndex++;
+                        CurrentWave = wavesToSpawn.Dequeue();
+                        StartCoroutine(SpawnWave(CurrentWave));
+                        countDown = timeBetweenWaves;
+                    }
+
                     startNextWave = false;
                     return;
                 }
@@ -45,22 +79,29 @@ public class EnemySpawner : MonoBehaviour {
 
     IEnumerator SpawnWave(Wave _wave)
     {
-        waveIndex++;
+        finisheWave = false;
 
         for (int i = 0; i < _wave.enemyCount; i++)
         {
-            SpawnEnemy();
-            yield return new WaitForSeconds(1f);
+            EnemysSpawn++;
+            SpawnEnemy(References.Refs.GetEnemy(0));
+            yield return new WaitForSeconds(timeBetweenEnemySpawns);
         }
+
+        finisheWave = true;
     }
 
-    void SpawnEnemy()
+    void SpawnEnemy(GameObject _enemyToSpawn)
     {
-        enemyAlive++;
-        GameObject Temp = Instantiate(References.Refs.GetEnemy(0), mapGen.Path[0].WorldPos, Quaternion.identity) as GameObject;
-        Temp.transform.parent = enemyRoot.transform;
-        Temp.GetComponent<EnemyBase>().SetPath(mapGen.Path);
-        References.enemysAlive.Add(Temp);
+        //enemyAlive++;
+        //GameObject Temp = Instantiate(_enemyToSpawn, mapGen.Path[0].WorldPos, Quaternion.identity) as GameObject;
+        //Temp.transform.parent = enemyRoot.transform;
+        //Temp.GetComponent<EnemyBase>().SetPath(mapGen.Path);
+        //References.enemysAlive.Add(Temp);
+
+        enemyAlive++;       
+        ObjectPoolManager.instance.ReuseObject(_enemyToSpawn, mapGen.Path[0].WorldPos, Quaternion.identity);
+        References.enemysAlive.Add(_enemyToSpawn);
     }
 
     public string GetWaveTimerText()
@@ -83,6 +124,12 @@ public class EnemySpawner : MonoBehaviour {
         isSpawningWaves = _Spawning;
     }
 
+    public void NextWave()
+    {
+        Wave Temp = GenerateNextWave();
+        wavesToSpawn.Enqueue(Temp);
+    }
+
     public void StartNextWave()
     {
         startNextWave = true;
@@ -90,9 +137,11 @@ public class EnemySpawner : MonoBehaviour {
 
     Wave GenerateNextWave()
     {
+        queuedWaveIndex++;
+
         Wave nextWave = new Wave();
 
-        nextWave.enemyCount = 1000;
+        nextWave.enemyCount += queuedWaveIndex;
         nextWave.enemysType = 0;
 
         return nextWave;

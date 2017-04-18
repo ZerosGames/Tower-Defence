@@ -1,9 +1,8 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Enum = System.Enum;
 
-public class References : MonoBehaviour {
+public class References : MonoBehaviour{
 
     public static References Refs;
 
@@ -21,6 +20,14 @@ public class References : MonoBehaviour {
 
     //InGameRefs
     public EnemySpawner spawnerRef;
+    public BuildManager buildManager;
+    public PlacementController placeController;
+    public PlayerData playerData;
+    public InputManager inputManager;
+    public MouseManager mouseController;
+    public MapGenerator mapGenerator;
+    public CameraController camController;
+    public World world;
 
     //UI
     public UIManager UIManger;
@@ -38,6 +45,18 @@ public class References : MonoBehaviour {
         Refs = this;
     }
 
+    public void InitReferences()
+    {
+        spawnerRef = FindObjectOfType<EnemySpawner>();
+        buildManager = FindObjectOfType<BuildManager>();
+        placeController = FindObjectOfType<PlacementController>();
+        playerData = FindObjectOfType<PlayerData>();
+        inputManager = FindObjectOfType<InputManager>();
+        mouseController = FindObjectOfType<MouseManager>();
+        mapGenerator = FindObjectOfType<MapGenerator>();
+        camController = FindObjectOfType<CameraController>();
+        world = FindObjectOfType<World>();
+    }
 
     //Turret Gets\\
 

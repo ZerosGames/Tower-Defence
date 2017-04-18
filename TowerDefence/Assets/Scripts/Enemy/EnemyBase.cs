@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class EnemyBase : MonoBehaviour {
+public class EnemyBase : PoolObject {
 
     public eData enemyData = new eData();
 
@@ -18,11 +18,13 @@ public class EnemyBase : MonoBehaviour {
     [SerializeField]
     Transform meshRotationpoint;
 
-    // Use this for initialization
-    void Start ()
+    void OnEnable()
     {
-        InitData();	
-	}
+        if (path == null)
+        {
+            path = References.Refs.mapGenerator.Path;
+        }
+    }
 
 	// Update is called once per frame
 	void Update ()
@@ -30,6 +32,7 @@ public class EnemyBase : MonoBehaviour {
         if (enemyData.health <= 0)
         {
             Destory(true);
+            return;
         }
 
         Move();     
@@ -68,7 +71,8 @@ public class EnemyBase : MonoBehaviour {
 
     void InitData()
     {
-        CurrentNode = path[nodeIndex];
+        CurrentNode = path[0];
+        nodeIndex = 1;
         enemyData.health = enemyData.maxHealth;
     }
 
@@ -76,7 +80,7 @@ public class EnemyBase : MonoBehaviour {
     {
         if (_killed)
         {
-            PlayerData.playerData.currentcurrency += enemyData.worth;
+            References.Refs.playerData.currentcurrency += enemyData.worth;
         }
         else
         {
@@ -86,7 +90,7 @@ public class EnemyBase : MonoBehaviour {
         EnemySpawner.enemyAlive--;
         References.enemysAlive.Remove(gameObject);
 
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 
     public void TakeDamage(int _Damage, int _Penatraition)
@@ -99,5 +103,11 @@ public class EnemyBase : MonoBehaviour {
     public void SetPath(List<Node> _path)
     {
         path = _path;
+    }
+
+    //Reset Data\\
+    public override void OnObjectReuse()
+    {
+        InitData();
     }
 }

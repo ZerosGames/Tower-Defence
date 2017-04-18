@@ -4,24 +4,11 @@ using UnityEngine.UI;
 
 public class BuildManager : MonoBehaviour {
 
-    public static BuildManager Instance;
-
     private GameObject turretToBuild;
 
     private GameObject buildingToBuild;
 
     private bool BuildMode = false;
-
-    void Awake()
-    {
-        if (Instance != null)
-        {
-            Debug.LogError("More Than One Buildmanager in Scene");
-            return;
-        }
-
-        Instance = this;    
-    }
 
     void Update()
     {

@@ -17,9 +17,7 @@ public class UIBuildingBuildMenu : MonoBehaviour {
     // Use this for initialization
     void Start()
     {
-
         Anim = GetComponent<Animator>();
-        buildManager = BuildManager.Instance;
     }
 
     // Update is called once per frame
@@ -31,13 +29,13 @@ public class UIBuildingBuildMenu : MonoBehaviour {
     public void ShowUI(bool _show)
     {
         IsShowing = _show;
-        BuildManager.Instance.SetBuildMode(_show);
+        References.Refs.buildManager.SetBuildMode(_show);
         Anim.SetBool("inBuildingMode", _show);
     }
 
     public void buildingSelected(int _type)
     {
-        buildManager.SetBuildingToBuild(References.Refs.GetBuilding(_type));
+        References.Refs.buildManager.SetBuildingToBuild(References.Refs.GetBuilding(_type));
     }
 
     public bool isShowing()

@@ -12,24 +12,30 @@ public class TurretBase : MonoBehaviour
     private bool placed = false;
     private Node placementNode;
 
-    [SerializeField]
-    private tData turretData = new tData();
+    public tData turretData = new tData();
+    public float updateTargetSeconds = 0.2f;
 
     //Public Variables\\
 
+    public bool trageting = true;
     public GameObject rotPoint;
     public GameObject hitEffectPrefab;
     public Transform[] firePoint = new Transform[2];
 
     private void Start ()
     {
-        InvokeRepeating("UpdateTargets", 0f, 0.5f);
+        StartCoroutine(UpdateTargets());
 	}
 
-    private void UpdateTargets()
+    private IEnumerator UpdateTargets()
     {
-        if (target == null)
+        while (trageting)
         {
+            if (target != null)
+            {
+                yield return new WaitForSeconds(updateTargetSeconds);
+            }
+
             targetColliders = Physics.OverlapSphere(transform.position, turretData.tRange, turretData.layerMask);
 
             float shortestDistance = Mathf.Infinity;
@@ -51,10 +57,10 @@ public class TurretBase : MonoBehaviour
             if (nearestEnemy != null && shortestDistance <= turretData.tRange)
             {
                 target = nearestEnemy.transform;
-                return;
+                yield return new WaitForSeconds(updateTargetSeconds);
             }
 
-            target = null;
+            yield return new WaitForSeconds(updateTargetSeconds);
         }
     }
 
@@ -62,7 +68,7 @@ public class TurretBase : MonoBehaviour
     {
         if (!GameManager.gameManager.GetPause() && placed)
         {
-            ShowRange(BuildManager.Instance.GetBuildingMode());
+            ShowRange(References.Refs.buildManager.GetBuildingMode());
 
             if (target != null && Vector3.Distance(transform.position, target.position) > turretData.tRange)
             {
@@ -79,7 +85,7 @@ public class TurretBase : MonoBehaviour
 
             if (turretData.fireRateCoolDown <= 0)
             {
-                FireAtTarget();
+                Fire();
 
                 turretData.fireRateCoolDown = 1f / turretData.tFireRate;
             }
@@ -88,7 +94,7 @@ public class TurretBase : MonoBehaviour
         }       
 	}
 
-    protected virtual void FireAtTarget()
+    protected virtual void Fire()
     {
         Ray ray = new Ray();
         ray.origin = transform.position;
@@ -161,7 +167,7 @@ public class TurretBase : MonoBehaviour
 
     public void SellTurret()
     {
-        PlayerData.playerData.currentcurrency += turretData.SellTurretCost;
+        References.Refs.playerData.currentcurrency += turretData.SellTurretCost;
         References.turretPlaced.Remove(gameObject);
         placementNode.Placeable = true;
         Destroy(gameObject);

@@ -67,11 +67,6 @@ public class MapGenerator : MonoBehaviour {
     [SerializeField]
     private GameObject crystalPerfab;
 
-    void Start ()
-    {
-        InitData();
-    }
-
     /// <summary>
     /// Init all the Map gen data, not done in the start method. For loading from another script later. 
     /// </summary>

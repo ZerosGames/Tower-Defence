@@ -10,25 +10,11 @@ public class PlayerData : MonoBehaviour {
     public int currentZomnCurrency;
     public int startingZomnCurrency = 0;
 
-    public static PlayerData playerData;
-
-    void Awake()
-    {
-        if (playerData != null)
-        {
-            Debug.LogError("There are two PlayerData in Scene");
-            return;
-        }
-
-        playerData = this;
-
-    }
-
-	void Start ()
+	public void InitData ()
     {
         currentcurrency = startingCurrency;
         currentZomnCurrency = startingZomnCurrency;
-}
+    }
 
 	void Update ()
     {

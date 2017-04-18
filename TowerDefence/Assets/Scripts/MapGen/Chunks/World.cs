@@ -8,11 +8,8 @@ public class World : MonoBehaviour {
 
     public GameObject chunkPrefab;
 
-    [SerializeField]
-    MapGenerator mapGen;
-
     // Use this for initialization
-    public void Init ()
+    public void InitData ()
     {
         for (int x = -2; x <= 1; x++)
         {
@@ -24,19 +21,7 @@ public class World : MonoBehaviour {
                 }
             }
         }
-
-        //UpdateChucks();
     }
-	
-    void Start()
-    {
-        Init();
-    }
-
-	// Update is called once per frame
-	void Update () {
-		
-	}
 
     public void CreateChunk(int x, int y, int z)
     {
@@ -68,7 +53,7 @@ public class World : MonoBehaviour {
 
     public void UpdateChucks()
     {
-        float[,] mapHeight = mapGen.GenerateNoiseMap();
+        float[,] mapHeight = References.Refs.mapGenerator.GenerateNoiseMap();
 
         for (int x = -32; x < 32; x++)
         {
@@ -76,7 +61,7 @@ public class World : MonoBehaviour {
             {
                 for (int y = 0; y < 32; y++)
                 {
-                    int Height = Mathf.RoundToInt(mapHeight[x + 32, z + 32] * 20);
+                    int Height = Mathf.RoundToInt(mapHeight[x + 32, z + 32] * 32);
 
                     if(Height >= 6 && Height <= 13)
                     {

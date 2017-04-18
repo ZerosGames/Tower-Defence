@@ -93,7 +93,11 @@
     <Compile Include="Assets\Scripts\Input\InputManager.cs" />
     <Compile Include="Assets\Scripts\Managers\BuildManager.cs" />
     <Compile Include="Assets\Scripts\Managers\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\LoadManager.cs" />
     <Compile Include="Assets\Scripts\Managers\MouseManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\ObjectPoolManager.cs" />
+    <Compile Include="Assets\Scripts\Managers\PoolObject.cs" />
+    <Compile Include="Assets\Scripts\Managers\SaveManager.cs" />
     <Compile Include="Assets\Scripts\MapGen\Chunks\Blocks\Block.cs" />
     <Compile Include="Assets\Scripts\MapGen\Chunks\Blocks\BlockAir.cs" />
     <Compile Include="Assets\Scripts\MapGen\Chunks\Blocks\BlockCyrstal.cs" />
@@ -112,7 +116,6 @@
     <Compile Include="Assets\Scripts\References.cs" />
     <Compile Include="Assets\Scripts\Turrets\TurretBase.cs" />
     <Compile Include="Assets\Scripts\Turrets\TurretChainGun.cs" />
-    <Compile Include="Assets\Scripts\UI\BuildMenu\NewBehaviourScript.cs" />
     <Compile Include="Assets\Scripts\UI\BuildMenu\UIBuildMenu.cs" />
     <Compile Include="Assets\Scripts\UI\BuildMenu\UIBuildingBuildMenu.cs" />
     <Compile Include="Assets\Scripts\UI\BuildMenu\UITurretBuildMenu.cs" />

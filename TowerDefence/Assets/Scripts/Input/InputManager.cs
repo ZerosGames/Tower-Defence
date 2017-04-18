@@ -10,10 +10,13 @@ public class InputManager : MonoBehaviour {
 
     void Update ()
     {
-        isShiftPressed = (Input.GetAxis("Shift") == 1) ?  true : false;
-        isMouseButtonLeftPressed = (Input.GetAxis("MouseButton 0") == 1) ? true : false;
-        isMouseButtonRightPressed = (Input.GetAxis("MouseButton 1") == 1) ? true : false;
-        isBuildButtonPressed = (Input.GetAxis("BuildMode") == 1) ? true : false;
+        if (GameManager.gameManager.gameState == GameManager.GameState.Playing)
+        {
+            isShiftPressed = (Input.GetAxis("Shift") == 1) ? true : false;
+            isMouseButtonLeftPressed = (Input.GetAxis("MouseButton 0") == 1) ? true : false;
+            isMouseButtonRightPressed = (Input.GetAxis("MouseButton 1") == 1) ? true : false;
+            isBuildButtonPressed = (Input.GetAxis("BuildMode") == 1) ? true : false;
+        }
     }
 
     public static bool GetShiftButtonPressed()
